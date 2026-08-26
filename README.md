@@ -89,7 +89,7 @@ Versi proyek mengikuti [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.
 - `MINOR`: fitur baru yang backward-compatible.
 - `MAJOR`: perubahan breaking.
 
-Versi canonical berada di `package.json`. Release harus menggunakan tag yang sama, misalnya `package.json` `1.2.0` dipublish dengan tag `v1.2.0`. Workflow release menolak tag yang tidak cocok.
+Versi canonical berada di `package.json` dan tetap memakai SemVer lengkap untuk kompatibilitas tooling. Tag release ditampilkan ringkas sebagai `vMAJOR.MINOR`, misalnya `package.json` `1.2.0` dipublish dengan tag `v1.2`. Workflow release mencocokkan major dan minor tag dengan package version.
 
 ## Deployment
 

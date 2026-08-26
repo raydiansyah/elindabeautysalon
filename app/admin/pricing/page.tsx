@@ -1,22 +1,13 @@
-import AdminLayout from '@/components/admin/AdminLayout'
-import PageHeader from '@/components/admin/PageHeader'
-import { DollarSign } from 'lucide-react'
+/**
+ * Module: Legacy admin pricing route
+ * Purpose: Redirect the retired pricing screen to the service catalog.
+ * Used by: Legacy links to /admin/pricing.
+ * Dependencies: Next.js redirect.
+ * Public functions: AdminPricing().
+ * Side effects: Redirects the current request to /admin/services.
+ */
+import { redirect } from 'next/navigation'
 
 export default function AdminPricing() {
-  return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <PageHeader
-          title="Kelola Harga"
-          breadcrumb={[]}
-        />
-
-        <div className="bg-surface/50 backdrop-blur-sm rounded-xl border border-border p-12 text-center">
-          <DollarSign className="w-16 h-16 text-primary mx-auto mb-4 opacity-50" />
-          <h3 className="text-xl font-semibold mb-2">Halaman Kelola Harga</h3>
-          <p className="text-text-muted">Fitur ini akan segera tersedia</p>
-        </div>
-      </div>
-    </AdminLayout>
-  )
+  redirect('/admin/services')
 }

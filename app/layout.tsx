@@ -11,8 +11,8 @@ import { ClerkProvider } from '@clerk/nextjs'
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Elynd Beauty Salon - Kecantikan & Wellness Terbaik",
-  description: "Beauty salon profesional dengan layanan terbaik: hair styling, facial treatment, spa, nail art, dan makeup. Tampil cantik dan percaya diri bersama Elynd.",
+  title: "Salon Kecantikan & Wellness Terbaik",
+  description: "Salon kecantikan profesional dengan layanan terbaik: hair styling, facial treatment, spa, nail art, dan makeup.",
   keywords: ["beauty salon", "hair styling", "facial treatment", "spa", "nail art", "makeup", "wellness"],
 };
 

@@ -7,6 +7,7 @@
  * Side effects: POST inserts one validated service into PostgreSQL.
  */
 import { NextResponse } from 'next/server'
+import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { services } from '@/lib/db/schema'
 import { validateServiceInput } from '@/lib/services/validation'
@@ -14,10 +15,11 @@ import { apiError } from '@/lib/api-response'
 import { recordAudit } from '@/lib/audit'
 import { requireAdminUser } from '@/lib/authz'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const data = await db.select().from(services).orderBy(services.order)
-    return NextResponse.json(data)
+    const isPublic = new URL(request.url).searchParams.get('public') === 'true'
+    const data = await db.select().from(services).where(isPublic ? eq(services.isActive, true) : undefined).orderBy(services.order)
+    return NextResponse.json(data, { headers: isPublic ? { 'Cache-Control': 'no-store' } : undefined })
   } catch (error) {
     console.error('Error fetching services:', error)
     return apiError('INTERNAL_ERROR', 'Gagal memuat layanan', 500)

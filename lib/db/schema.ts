@@ -60,6 +60,27 @@ export const services = pgTable('services', {
 })
 
 // ==========================================
+// COURSES TABLE (Kursus Kecantikan)
+// ==========================================
+export const courses = pgTable('courses', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  instructor: text('instructor').notNull(),
+  level: text('level').notNull().default('Pemula'),
+  duration: text('duration').notNull(),
+  schedule: text('schedule').notNull(),
+  imageUrl: text('image_url'),
+  enrollmentUrl: text('enrollment_url'),
+  order: integer('order').notNull().default(0),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  activeOrderIdx: index('courses_active_order_idx').on(table.isActive, table.order),
+}))
+
+// ==========================================
 // PRICING TIERS TABLE (Harga Layanan)
 // ==========================================
 export const pricingTiers = pgTable('pricing_tiers', {
@@ -251,6 +272,7 @@ export const auditLog = pgTable('audit_log', {
 export const schema = {
   users,
   services,
+  courses,
   pricingTiers,
   gallery,
   siteContent,

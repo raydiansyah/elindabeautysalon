@@ -1,3 +1,11 @@
+/**
+ * Module: Salon Location Section
+ * Purpose: Render the salon map embed, contact details, and opening hours.
+ * Used by: Public landing page at / via app/page.tsx.
+ * Dependencies: Framer Motion, Lucide icons, OPENING_HOURS constants, public map env.
+ * Public functions: Location()
+ * Side effects: Loads Google Maps in a lazy iframe; no application data writes.
+ */
 'use client'
 
 import { motion } from 'framer-motion'
@@ -25,9 +33,7 @@ export default function Location() {
         >
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
             Lokasi &{' '}
-            <span className="bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-              Jam Buka
-            </span>
+            <span className="text-primary">Jam Buka</span>
           </h2>
           <p className="text-text-light text-lg max-w-2xl mx-auto">
             Kunjungi salon kami atau hubungi untuk reservasi
@@ -45,12 +51,13 @@ export default function Location() {
             {googleMapsUrl && googleMapsUrl !== 'https://www.google.com/maps/embed?pb=your-maps-embed-url' ? (
               <iframe
                 src={googleMapsUrl}
+                title="Lokasi Beauty Salon ELIN di Google Maps"
                 width="100%"
                 height="100%"
                 style={{ border: 0, minHeight: '400px' }}
                 allowFullScreen
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
+                referrerPolicy="strict-origin-when-cross-origin"
               />
             ) : (
               <div className="bg-surface/50 aspect-square flex items-center justify-center">
@@ -58,7 +65,7 @@ export default function Location() {
                   <MapPin className="w-16 h-16 text-primary mx-auto mb-4" />
                   <p className="text-text-muted">Google Maps akan ditampilkan di sini</p>
                   <p className="text-sm text-text-muted mt-2">
-                    Setup GOOGLE_MAPS_EMBED_URL di .env.local
+                    Setup NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL di .env.local
                   </p>
                 </div>
               </div>

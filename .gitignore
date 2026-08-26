@@ -38,3 +38,8 @@ next-env.d.ts
 
 # Drizzle
 /lib/db/migrations/*.sql
+
+# Local agent and database tooling
+/.agents/
+/.neon
+/graphify-out/

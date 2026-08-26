@@ -37,7 +37,7 @@ export default function PageHeader({ title, breadcrumb, action }: PageHeaderProp
       </div>
 
       {/* Action Button */}
-      {action && <div>{action}</div>}
+      {action && <div className="w-full sm:w-auto [&>button]:w-full">{action}</div>}
     </div>
   )
 }

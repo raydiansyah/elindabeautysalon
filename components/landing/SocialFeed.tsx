@@ -1,3 +1,11 @@
+/**
+ * Module: Social Feed
+ * Purpose: Present Instagram and TikTok touchpoints with local visual fallbacks.
+ * Used by: Public landing page route (app/page.tsx).
+ * Dependencies: Framer Motion, Lucide icons, optional Elfsight widgets.
+ * Public functions: SocialFeed()
+ * Side effects: Loads optional third-party widgets and remote images.
+ */
 'use client'
 
 import { motion } from 'framer-motion'
@@ -25,9 +33,7 @@ export default function SocialFeed() {
         >
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
             Ikuti Kami di{' '}
-            <span className="bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-              Social Media
-            </span>
+            <span className="text-primary">Social Media</span>
           </h2>
           <p className="text-text-light text-lg max-w-2xl mx-auto">
             Lihat update terbaru dari kami di Instagram dan TikTok
@@ -43,7 +49,7 @@ export default function SocialFeed() {
             className="bg-surface/50 backdrop-blur-sm rounded-2xl border border-border p-8"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-xl flex items-center justify-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-pink-600">
                 <Camera className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -72,7 +78,7 @@ export default function SocialFeed() {
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div
                     key={i}
-                    className="aspect-square bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-lg overflow-hidden"
+                    className="aspect-square overflow-hidden rounded-lg bg-primary/15"
                   >
                     <img
                       src={`https://picsum.photos/seed/ig${i}/300/300`}
@@ -88,7 +94,7 @@ export default function SocialFeed() {
               href="https://instagram.com/elyndbeauty"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 block w-full text-center py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-pink-500/30 transition-all duration-300"
+              className="mt-6 block w-full rounded-full bg-pink-600 py-3 text-center font-semibold text-white transition-all duration-300 hover:bg-pink-500 hover:shadow-lg hover:shadow-pink-500/30"
             >
               Follow di Instagram
             </a>
@@ -130,7 +136,7 @@ export default function SocialFeed() {
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="aspect-video bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-lg overflow-hidden"
+                    className="aspect-video overflow-hidden rounded-lg bg-primary/15"
                   >
                     <img
                       src={`https://picsum.photos/seed/tt${i}/600/340`}

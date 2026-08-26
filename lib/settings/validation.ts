@@ -6,7 +6,7 @@
  * Public functions: validateSettingsInput().
  * Side effects: None.
  */
-const allowedFields = new Set(['salonName', 'address', 'whatsapp', 'openingHours', 'logoUrl', 'theme', 'seoTitle', 'seoDescription'])
+const allowedFields = new Set(['salonName', 'address', 'whatsapp', 'openingHours', 'logoUrl', 'heroImageUrl', 'aboutImageUrl', 'theme', 'seoTitle', 'seoDescription'])
 
 export function validateSettingsInput(input: unknown): { value?: Record<string, string>; error?: string } {
   if (!input || typeof input !== 'object' || Array.isArray(input)) return { error: 'Format settings tidak valid' }
@@ -17,7 +17,10 @@ export function validateSettingsInput(input: unknown): { value?: Record<string, 
     if (typeof raw !== 'string' || raw.length > 2000) return { error: `Nilai ${key} tidak valid` }
     result[key] = raw.trim()
   }
-  if ('whatsapp' in result && !/^\+?[0-9][0-9\s-]{7,19}$/.test(result.whatsapp)) return { error: 'Format WhatsApp tidak valid' }
-  if ('openingHours' in result && !/^(?:[A-Za-zÀ-ÿ]+(?:-[A-Za-zÀ-ÿ]+)?,\s*)?([01]\d|2[0-3]):[0-5]\d\s*-\s*([01]\d|2[0-3]):[0-5]\d$/.test(result.openingHours)) return { error: 'Format jam operasional harus HH:mm-HH:mm' }
+  if ('whatsapp' in result && result.whatsapp && !/^\+?[0-9][0-9\s-]{7,19}$/.test(result.whatsapp)) return { error: 'Format WhatsApp tidak valid' }
+  if ('openingHours' in result && result.openingHours && !/^(?:[A-Za-zÀ-ÿ]+(?:-[A-Za-zÀ-ÿ]+)?,\s*)?([01]\d|2[0-3]):[0-5]\d\s*-\s*([01]\d|2[0-3]):[0-5]\d$/.test(result.openingHours)) return { error: 'Format jam operasional harus HH:mm-HH:mm' }
+  for (const field of ['heroImageUrl', 'aboutImageUrl']) {
+    if (field in result && result[field] && !result[field].startsWith('/') && !/^https?:\/\//i.test(result[field])) return { error: `URL gambar ${field} tidak valid` }
+  }
   return { value: result }
 }

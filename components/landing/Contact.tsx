@@ -1,3 +1,11 @@
+/**
+ * Module: Contact Form
+ * Purpose: Collect reservation questions and contact details from visitors.
+ * Used by: Public landing page route (app/page.tsx).
+ * Dependencies: Framer Motion, Lucide icons.
+ * Public functions: Contact()
+ * Side effects: Updates local form state and simulates submission feedback.
+ */
 'use client'
 
 import { motion } from 'framer-motion'
@@ -45,9 +53,7 @@ export default function Contact() {
         >
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
             Hubungi{' '}
-            <span className="bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-              Kami
-            </span>
+            <span className="text-primary">Kami</span>
           </h2>
           <p className="text-text-light text-lg max-w-2xl mx-auto">
             Reservasi atau tanya jawab, silakan isi form di bawah
@@ -174,7 +180,7 @@ export default function Contact() {
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="w-full py-4 bg-gradient-to-r from-primary to-primary-light text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-4 font-semibold text-white transition-all duration-300 hover:bg-primary-light hover:shadow-lg hover:shadow-primary/30 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {status === 'loading' ? (
                 <>

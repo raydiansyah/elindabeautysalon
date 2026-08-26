@@ -4,15 +4,16 @@
  * Used by: npm run db:seed.
  * Dependencies: Drizzle database client, schema tables, bcryptjs, dotenv.
  * Public functions: seed() via the executable module entrypoint.
- * Side effects: Inserts users, catalog, business, gallery, and settings rows into PostgreSQL.
+ * Side effects: Inserts users, catalog, courses, business, gallery, and settings rows into PostgreSQL.
  */
 import * as dotenv from 'dotenv'
 // Load environment variables for seed script
 dotenv.config({ path: '.env.local' })
 
 import { db } from './index'
-import { users, services, pricingTiers, siteContent, businessInfo, gallery, settings } from './schema'
+import { users, services, courses, pricingTiers, siteContent, businessInfo, gallery, settings } from './schema'
 import { hash } from 'bcryptjs'
+import { count } from 'drizzle-orm'
 
 async function seed() {
   console.log('🌱 Starting database seed...')
@@ -33,8 +34,9 @@ async function seed() {
 
     // 2. Create services
     console.log('💅 Creating services...')
-    
-    await db.insert(services).values([
+
+    const [{ total: serviceCount }] = await db.select({ total: count() }).from(services)
+    if (Number(serviceCount) === 0) await db.insert(services).values([
       {
         name: 'Potong & Styling Rambut',
         description: 'Potong rambut profesional dengan styling modern sesuai tren terkini',
@@ -90,6 +92,34 @@ async function seed() {
         icon: 'eye',
         startingPrice: 180000,
         order: 8,
+      },
+    ])
+
+    // 2b. Create sample academy courses
+    console.log('📚 Creating sample courses...')
+
+    await db.insert(courses).values([
+      {
+        title: 'Fundamental Hair Styling',
+        description: 'Pelajari fondasi konsultasi, sectioning, dan styling harian bersama tim Elin.',
+        instructor: 'Tim Educator Elin',
+        level: 'Pemula',
+        duration: '2 hari',
+        schedule: 'Sabtu–Minggu',
+        imageUrl: '/images/courses/hair-styling.jpg',
+        enrollmentUrl: '#kontak',
+        order: 1,
+      },
+      {
+        title: 'Professional Makeup',
+        description: 'Bangun look yang rapi dan tahan lama untuk acara spesial dengan teknik profesional.',
+        instructor: 'MUA Elin',
+        level: 'Menengah',
+        duration: '3 hari',
+        schedule: 'Jadwal privat',
+        imageUrl: '/images/courses/pro-makeup.jpg',
+        enrollmentUrl: '#kontak',
+        order: 2,
       },
     ])
 
@@ -191,6 +221,8 @@ async function seed() {
         whatsapp: process.env.WHATSAPP_NUMBER || '6281234567890',
         openingHours: 'Senin-Minggu, 09:00-21:00',
         logoUrl: '',
+        heroImageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=2200&q=85&fit=crop',
+        aboutImageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=800&fit=crop',
         theme: 'cream',
         seoTitle: 'Elynd Beauty Salon',
         seoDescription: 'Salon kecantikan profesional untuk perawatan rambut, wajah, dan tubuh.',
@@ -200,41 +232,42 @@ async function seed() {
 
     // 6. Create sample gallery
     console.log('🖼️ Creating sample gallery...')
-    
-    await db.insert(gallery).values([
+
+    const [{ total: galleryCount }] = await db.select({ total: count() }).from(gallery)
+    if (Number(galleryCount) === 0) await db.insert(gallery).values([
       {
-        imageUrl: '/images/gallery/hair-style-1.jpg',
+        imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=85',
         title: 'Modern Bob Cut',
         category: 'hair',
         beforeAfter: true,
         order: 1,
       },
       {
-        imageUrl: '/images/gallery/facial-1.jpg',
+        imageUrl: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1200&q=85',
         title: 'Glowing Facial Treatment',
         category: 'facial',
         order: 2,
       },
       {
-        imageUrl: '/images/gallery/nail-art-1.jpg',
+        imageUrl: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1200&q=85',
         title: 'Elegant Nail Design',
         category: 'nail',
         order: 3,
       },
       {
-        imageUrl: '/images/gallery/makeup-1.jpg',
+        imageUrl: 'https://images.unsplash.com/photo-1487412912498-0447578fcca8?auto=format&fit=crop&w=1200&q=85',
         title: 'Bridal Makeup Look',
         category: 'makeup',
         order: 4,
       },
       {
-        imageUrl: '/images/gallery/spa-1.jpg',
+        imageUrl: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1200&q=85',
         title: 'Relaxing Spa Treatment',
         category: 'spa',
         order: 5,
       },
       {
-        imageUrl: '/images/gallery/hair-color-1.jpg',
+        imageUrl: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1200&q=85',
         title: 'Balayage Hair Color',
         category: 'hair',
         beforeAfter: true,

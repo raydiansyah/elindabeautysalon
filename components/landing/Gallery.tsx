@@ -1,53 +1,33 @@
+/**
+ * Module: Salon Gallery
+ * Purpose: Show selected salon work with an animated lightbox viewer.
+ * Used by: Public landing page route (app/page.tsx).
+ * Dependencies: Framer Motion, Lucide icons, ColorRevealImage, remote portfolio images.
+ * Public functions: Gallery()
+ * Side effects: Loads remote images and controls local lightbox state.
+ */
 'use client'
 
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { X } from 'lucide-react'
+import ColorRevealImage from './ColorRevealImage'
 
-const galleryImages = [
-  {
-    id: 1,
-    src: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&h=800&fit=crop',
-    title: 'Modern Bob Cut',
-    category: 'hair',
-  },
-  {
-    id: 2,
-    src: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&h=600&fit=crop',
-    title: 'Glowing Facial Treatment',
-    category: 'facial',
-  },
-  {
-    id: 3,
-    src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&h=600&fit=crop',
-    title: 'Elegant Nail Design',
-    category: 'nail',
-  },
-  {
-    id: 4,
-    src: 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=600&h=800&fit=crop',
-    title: 'Bridal Makeup Look',
-    category: 'makeup',
-  },
-  {
-    id: 5,
-    src: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&h=600&fit=crop',
-    title: 'Relaxing Spa Treatment',
-    category: 'spa',
-  },
-  {
-    id: 6,
-    src: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&h=800&fit=crop',
-    title: 'Balayage Hair Color',
-    category: 'hair',
-  },
-]
+type GalleryImage = { id: number; imageUrl: string; title: string; category: string; beforeAfter: boolean }
 
 export default function Gallery() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.1 })
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([])
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
+
+  useEffect(() => {
+    fetch('/api/gallery?public=true', { cache: 'no-store' })
+      .then((response) => response.json())
+      .then((payload) => setGalleryImages(Array.isArray(payload.data) ? payload.data : []))
+      .catch(() => setGalleryImages([]))
+  }, [])
 
   return (
     <section className="py-20 md:py-32">
@@ -62,9 +42,7 @@ export default function Gallery() {
         >
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
             Galeri{' '}
-            <span className="bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-              Portfolio
-            </span>
+            <span className="text-primary">Portfolio</span>
           </h2>
           <p className="text-text-light text-lg max-w-2xl mx-auto">
             Lihat hasil kerja tim profesional kami
@@ -82,12 +60,8 @@ export default function Gallery() {
               onClick={() => setSelectedImage(image.id)}
               className="group relative aspect-square overflow-hidden rounded-2xl cursor-pointer"
             >
-              <img
-                src={image.src}
-                alt={image.title}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+              <ColorRevealImage src={image.imageUrl} alt={image.title} />
+              <div className="absolute inset-0 flex items-end bg-black/70 p-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <div>
                   <h3 className="text-white text-xl font-semibold">{image.title}</h3>
                   <p className="text-white/70 capitalize">{image.category}</p>
@@ -114,7 +88,7 @@ export default function Gallery() {
             <X className="w-8 h-8" />
           </button>
           <img
-            src={galleryImages.find((img) => img.id === selectedImage)?.src}
+            src={galleryImages.find((img) => img.id === selectedImage)?.imageUrl}
             alt={galleryImages.find((img) => img.id === selectedImage)?.title}
             className="max-w-full max-h-[90vh] object-contain rounded-lg"
           />

@@ -11,24 +11,25 @@ import Hero from '@/components/landing/Hero'
 import Promotions from '@/components/landing/Promotions'
 import About from '@/components/landing/About'
 import Services from '@/components/landing/Services'
-import Pricing from '@/components/landing/Pricing'
+import Courses from '@/components/landing/Courses'
 import Gallery from '@/components/landing/Gallery'
 import SocialFeed from '@/components/landing/SocialFeed'
 import Location from '@/components/landing/Location'
 import Contact from '@/components/landing/Contact'
 import Footer from '@/components/landing/Footer'
 import WhatsAppButton from '@/components/landing/WhatsAppButton'
+import { SalonSettingsProvider } from '@/components/landing/SalonSettingsProvider'
 
 export default function Home() {
   return (
-    <>
+    <SalonSettingsProvider>
       <Navbar />
-      <main>
+      <main className="w-full max-w-full overflow-x-hidden">
         <Hero />
         <Promotions />
         <About />
         <Services />
-        <Pricing />
+        <Courses />
         <Gallery />
         <SocialFeed />
         <Location />
@@ -36,6 +37,6 @@ export default function Home() {
       </main>
       <Footer />
       <WhatsAppButton />
-    </>
+    </SalonSettingsProvider>
   )
 }

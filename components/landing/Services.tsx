@@ -1,8 +1,16 @@
+/**
+ * Module: Salon Services
+ * Purpose: Present the salon treatment menu without publishing fixed prices.
+ * Used by: Public landing page route (app/page.tsx).
+ * Dependencies: Framer Motion, Lucide icons.
+ * Public functions: Services()
+ * Side effects: None; renders service information.
+ */
 'use client'
 
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Scissors,
   Palette,
@@ -25,68 +33,19 @@ const iconMap = {
   eye: Eye,
 }
 
-const services = [
-  {
-    name: 'Potong & Styling Rambut',
-    description: 'Potong rambut profesional dengan styling modern sesuai tren terkini',
-    icon: 'scissors',
-    startingPrice: 150000,
-  },
-  {
-    name: 'Pewarnaan & Highlight',
-    description: 'Pewarnaan rambut premium dengan produk berkualitas tinggi',
-    icon: 'palette',
-    startingPrice: 300000,
-  },
-  {
-    name: 'Hair Treatment & Spa',
-    description: 'Perawatan rambut intensif untuk rambut sehat dan berkilau',
-    icon: 'sparkles',
-    startingPrice: 250000,
-  },
-  {
-    name: 'Facial Treatment & Skincare',
-    description: 'Perawatan wajah mendalam untuk kulit bersih dan glowing',
-    icon: 'face-smile',
-    startingPrice: 200000,
-  },
-  {
-    name: 'Nail Art & Manicure',
-    description: 'Desain kuku artistik dengan cat premium tahan lama',
-    icon: 'hand',
-    startingPrice: 150000,
-  },
-  {
-    name: 'Spa & Body Massage',
-    description: 'Pijat relaksasi dan perawatan tubuh menyeluruh',
-    icon: 'flower-2',
-    startingPrice: 350000,
-  },
-  {
-    name: 'Makeup Pesta & Bridal',
-    description: 'Makeup profesional untuk acara spesial dan pernikahan',
-    icon: 'crown',
-    startingPrice: 500000,
-  },
-  {
-    name: 'Treatment Alis & Bulu Mata',
-    description: 'Pembentukan dan pewarnaan alis serta extension bulu mata',
-    icon: 'eye',
-    startingPrice: 180000,
-  },
-]
-
-function formatRupiah(amount: number) {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  }).format(amount)
-}
+type Service = { id: number; name: string; description: string; icon: keyof typeof iconMap }
 
 export default function Services() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.1 })
+  const [services, setServices] = useState<Service[]>([])
+
+  useEffect(() => {
+    fetch('/api/services?public=true', { cache: 'no-store' })
+      .then((response) => response.json())
+      .then((payload) => setServices(Array.isArray(payload) ? payload : payload.data ?? []))
+      .catch(() => setServices([]))
+  }, [])
 
   return (
     <section id="layanan" className="py-20 md:py-32">
@@ -101,9 +60,7 @@ export default function Services() {
         >
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
             Jenis{' '}
-            <span className="bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-              Layanan
-            </span>
+            <span className="text-primary">Layanan</span>
           </h2>
           <p className="text-text-light text-lg max-w-2xl mx-auto">
             Kami menyediakan berbagai layanan kecantikan profesional untuk kebutuhan Anda
@@ -111,7 +68,8 @@ export default function Services() {
         </motion.div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid min-h-32 grid-flow-dense grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {!services.length && <p className="col-span-full text-center text-text-muted">Layanan sedang diperbarui.</p>}
           {services.map((service, index) => {
             const Icon = iconMap[service.icon as keyof typeof iconMap]
             return (
@@ -121,16 +79,13 @@ export default function Services() {
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -5, scale: 1.02 }}
-                className="group bg-surface/50 backdrop-blur-sm p-6 rounded-2xl border border-border hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+                className="group rounded-2xl border border-border bg-surface/50 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
               >
-                <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-xl flex items-center justify-center mb-4 group-hover:from-primary/30 group-hover:to-primary-light/30 transition-all">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/15 transition-colors group-hover:bg-primary/25">
                   <Icon className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
                 <p className="text-text-muted text-sm mb-4">{service.description}</p>
-                <div className="text-primary font-semibold">
-                  Mulai {formatRupiah(service.startingPrice)}
-                </div>
               </motion.div>
             )
           })}

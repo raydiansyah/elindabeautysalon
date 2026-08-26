@@ -11,7 +11,7 @@
 import AdminLayout from '@/components/admin/AdminLayout'
 import PageHeader from '@/components/admin/PageHeader'
 import StatCard from '@/components/admin/StatCard'
-import { LayoutDashboard, TicketPercent, Eye, Percent, TrendingDown, Scissors, DollarSign, Image as GalleryIcon, TrendingUp } from 'lucide-react'
+import { TicketPercent, Eye, Percent, TrendingDown, Scissors, Image as GalleryIcon, TrendingUp, BookOpen } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 type Stats = { totalPromoAktif: number; totalView: number; totalRedemption: number; conversionRate: number; totalDiskonGiven: number }
@@ -79,14 +79,6 @@ export default function AdminDashboard() {
               <div className="text-sm text-text-muted">Tambah, edit, atau hapus layanan</div>
             </a>
             <a
-              href="/admin/pricing"
-              className="group p-6 bg-accent-gold/10 rounded-xl hover:bg-accent-gold/20 transition-all duration-200 border border-transparent hover:border-accent-gold/30"
-            >
-              <DollarSign className="w-8 h-8 text-accent-gold mb-3 group-hover:scale-110 transition-transform" />
-              <div className="font-semibold mb-1">Kelola Harga</div>
-              <div className="text-sm text-text-muted">Update harga dan fitur paket</div>
-            </a>
-            <a
               href="/admin/gallery"
               className="group p-6 bg-accent-rose/10 rounded-xl hover:bg-accent-rose/20 transition-all duration-200 border border-transparent hover:border-accent-rose/30"
             >
@@ -95,12 +87,12 @@ export default function AdminDashboard() {
               <div className="text-sm text-text-muted">Upload atau hapus gambar</div>
             </a>
             <a
-              href="/admin/content"
-              className="group p-6 bg-green-500/10 rounded-xl hover:bg-green-500/20 transition-all duration-200 border border-transparent hover:border-green-500/30"
+              href="/admin/courses"
+              className="group p-6 bg-primary/10 rounded-xl hover:bg-primary/20 transition-all duration-200 border border-transparent hover:border-primary/30"
             >
-              <LayoutDashboard className="w-8 h-8 text-green-500 mb-3 group-hover:scale-110 transition-transform" />
-              <div className="font-semibold mb-1">Kelola Konten</div>
-              <div className="text-sm text-text-muted">Edit teks halaman</div>
+              <BookOpen className="w-8 h-8 text-primary mb-3 group-hover:scale-110 transition-transform" />
+              <div className="font-semibold mb-1">Kelola Kursus</div>
+              <div className="text-sm text-text-muted">Atur program belajar dan jadwal</div>
             </a>
           </div>
         </div>

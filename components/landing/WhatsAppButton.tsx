@@ -1,12 +1,22 @@
+/**
+ * Module: Landing WhatsApp CTA
+ * Purpose: Create a salon-branded WhatsApp reservation link.
+ * Used by: Public landing page route (app/page.tsx).
+ * Dependencies: Framer Motion, Lucide icons, salon constants, public salon settings context.
+ * Public functions: WhatsAppButton().
+ * Side effects: Opens an external WhatsApp conversation when clicked.
+ */
 'use client'
 
 import { motion } from 'framer-motion'
 import { MessageCircle } from 'lucide-react'
 import { WHATSAPP_NUMBER } from '@/lib/constants'
+import { useSalonSettings } from './SalonSettingsProvider'
 
 export default function WhatsAppButton() {
+  const { salonName } = useSalonSettings()
   const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    'Halo, saya ingin membuat reservasi di Elynd Beauty Salon'
+    `Halo, saya ingin membuat reservasi di ${salonName}`
   )}`
 
   return (

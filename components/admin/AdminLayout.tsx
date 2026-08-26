@@ -15,23 +15,23 @@ import { AnimatePresence, motion } from 'framer-motion'
 import {
   LayoutDashboard,
   Scissors,
-  DollarSign,
+  BookOpen,
   Image,
-  FileText,
   Settings,
   Sparkles,
+  Globe2,
 } from 'lucide-react'
 import { UserButton } from '@clerk/nextjs'
 import AdminHeader from './AdminHeader'
 
 const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+  { name: 'Lihat Website', href: '/', icon: Globe2 },
   { name: 'Layanan', href: '/admin/services', icon: Scissors },
+  { name: 'Kursus', href: '/admin/courses', icon: BookOpen },
   { name: 'Promosi', href: '/admin/promotions', icon: Sparkles },
   { name: 'Redemption', href: '/admin/redemptions', icon: Sparkles },
-  { name: 'Harga', href: '/admin/pricing', icon: DollarSign },
   { name: 'Galeri', href: '/admin/gallery', icon: Image },
-  { name: 'Konten', href: '/admin/content', icon: FileText },
   { name: 'Pengaturan', href: '/admin/settings', icon: Settings },
   { name: 'Staff & Akses', href: '/admin/users', icon: Settings },
 ]
@@ -102,8 +102,9 @@ export default function AdminLayout({
               <div className="flex items-center gap-2">
                 <Sparkles className="w-8 h-8 text-primary flex-shrink-0" />
                 {!sidebarCollapsed && (
-                  <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent whitespace-nowrap">
-                    Elynd
+                  <h1 className="flex flex-col whitespace-nowrap leading-none text-foreground">
+                    <span className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-text-muted">Beauty Salon</span>
+                    <span className="mt-1 font-display text-2xl font-bold">Elin</span>
                   </h1>
                 )}
               </div>

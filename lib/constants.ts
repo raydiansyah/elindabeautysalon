@@ -1,10 +1,18 @@
+/**
+ * Module: Public Content Constants
+ * Purpose: Store navigation, service fallback, and opening-hour content.
+ * Used by: Public landing sections and server-side content fallbacks.
+ * Dependencies: Environment variables for the WhatsApp number.
+ * Public functions: None; exports immutable content values.
+ * Side effects: Reads one environment variable at module load.
+ */
 export const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || '6281234567890'
 
 export const NAVIGATION_LINKS = [
   { label: 'Beranda', href: '#beranda' },
   { label: 'Tentang', href: '#tentang' },
   { label: 'Layanan', href: '#layanan' },
-  { label: 'Harga', href: '#harga' },
+  { label: 'Kursus', href: '#kursus' },
   { label: 'Lokasi', href: '#lokasi' },
   { label: 'Kontak', href: '#kontak' },
 ]
@@ -15,52 +23,24 @@ export const SERVICES_PLACEHOLDER = [
     name: 'Potong & Styling Rambut',
     description: 'Potong rambut profesional dengan styling modern',
     icon: 'scissors',
-    startingPrice: 150000,
   },
   {
     id: 2,
     name: 'Pewarnaan & Highlight',
     description: 'Pewarnaan rambut premium dengan produk berkualitas',
     icon: 'palette',
-    startingPrice: 300000,
   },
   {
     id: 3,
     name: 'Facial Treatment',
     description: 'Perawatan wajah untuk kulit bersih dan glowing',
     icon: 'face-smile',
-    startingPrice: 200000,
   },
   {
     id: 4,
     name: 'Spa & Massage',
     description: 'Pijat relaksasi dan perawatan tubuh',
     icon: 'flower-2',
-    startingPrice: 350000,
-  },
-]
-
-export const PRICING_PLACEHOLDER = [
-  {
-    id: 1,
-    name: 'Basic',
-    price: 150000,
-    features: ['Potong rambut', 'Cuci & blow dry', 'Konsultasi'],
-    isPopular: false,
-  },
-  {
-    id: 2,
-    name: 'Premium',
-    price: 350000,
-    features: ['Semua fitur Basic', 'Hair treatment', 'Head massage'],
-    isPopular: true,
-  },
-  {
-    id: 3,
-    name: 'VIP',
-    price: 750000,
-    features: ['Semua fitur Premium', 'Private room', 'Priority booking'],
-    isPopular: false,
   },
 ]
 

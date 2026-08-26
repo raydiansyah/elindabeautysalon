@@ -1,13 +1,23 @@
+/**
+ * Module: Landing Navigation
+ * Purpose: Provide responsive navigation and booking CTA for the public salon page.
+ * Used by: Public landing page route (app/page.tsx).
+ * Dependencies: Framer Motion, Lucide icons, NAVIGATION_LINKS, public salon settings context.
+ * Public functions: Navbar()
+ * Side effects: Reads window scroll position and controls mobile menu state.
+ */
 'use client'
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Sparkles } from 'lucide-react'
 import { NAVIGATION_LINKS } from '@/lib/constants'
+import { useSalonSettings } from './SalonSettingsProvider'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { salonName } = useSalonSettings()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,11 +41,13 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#beranda" className="flex items-center gap-2">
-            <Sparkles className="w-8 h-8 text-primary" />
-            <span className="font-display text-2xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-              Elynd
-            </span>
+          <a
+            href="#beranda"
+            aria-label={`${salonName}, kembali ke beranda`}
+            className="flex min-w-0 items-center gap-2"
+          >
+            <Sparkles className="h-7 w-7 shrink-0 text-primary sm:h-8 sm:w-8" />
+            <span className="max-w-[12rem] truncate font-display text-xl font-bold leading-none text-foreground sm:max-w-[16rem] sm:text-2xl">{salonName}</span>
           </a>
 
           {/* Desktop Navigation */}
@@ -51,7 +63,7 @@ export default function Navbar() {
             ))}
             <a
               href="#kontak"
-              className="px-6 py-2.5 bg-gradient-to-r from-primary to-primary-light text-white font-medium rounded-full hover:shadow-lg hover:shadow-primary/50 transition-all duration-200"
+              className="rounded-full bg-primary px-6 py-2.5 font-medium text-white transition-all duration-200 hover:bg-primary-light hover:shadow-lg hover:shadow-primary/30"
             >
               Booking Sekarang
             </a>
@@ -92,7 +104,7 @@ export default function Navbar() {
               <a
                 href="#kontak"
                 onClick={() => setIsOpen(false)}
-                className="block w-full text-center px-6 py-3 bg-gradient-to-r from-primary to-primary-light text-white font-medium rounded-full"
+                className="block w-full rounded-full bg-primary px-6 py-3 text-center font-medium text-white"
               >
                 Booking Sekarang
               </a>

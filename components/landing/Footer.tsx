@@ -1,9 +1,19 @@
+/**
+ * Module: Landing Footer
+ * Purpose: Close the public salon experience with navigation, social links, and contact details.
+ * Used by: Public landing page route (app/page.tsx).
+ * Dependencies: Framer Motion, Lucide icons, public salon settings context.
+ * Public functions: Footer()
+ * Side effects: Reads the current year and scrolls the browser to the page top.
+ */
 'use client'
 
 import { motion } from 'framer-motion'
 import { Sparkles, Camera, Music, MessageCircle, ChevronUp } from 'lucide-react'
+import { useSalonSettings } from './SalonSettingsProvider'
 
 export default function Footer() {
+  const { salonName } = useSalonSettings()
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -16,9 +26,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="w-8 h-8 text-primary" />
-              <span className="font-display text-2xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-                Elynd
-              </span>
+              <span className="max-w-[16rem] truncate font-display text-2xl font-bold leading-none text-foreground">{salonName}</span>
             </div>
             <p className="text-text-light mb-6">
               Beauty salon profesional dengan layanan terbaik untuk kecantikan dan wellness Anda.
@@ -74,8 +82,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#harga" className="text-text-light hover:text-primary transition-colors">
-                  Harga
+                <a href="#kursus" className="text-text-light hover:text-primary transition-colors">
+                  Kursus
                 </a>
               </li>
               <li>
@@ -115,7 +123,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="pt-8 border-t border-border text-center">
           <p className="text-text-muted">
-            © {new Date().getFullYear()} Elynd Beauty Salon. All rights reserved.
+            © {new Date().getFullYear()} {salonName}. All rights reserved.
           </p>
         </div>
       </div>

@@ -14,6 +14,7 @@ import { requireAdminUser, requireOperationalUser } from '@/lib/authz'
 import { promotionInputSchema } from '@/lib/promotions/validation'
 import { notifyAdmins, sendPromotionEmail } from '@/lib/notifications/service'
 import { recordAudit } from '@/lib/audit'
+import { normalizeR2MediaUrl } from '@/lib/r2'
 
 function errorResponse(error: unknown) {
   if (error instanceof Response) return error
@@ -39,7 +40,8 @@ export async function GET(request: Request) {
       db.select({ total: count() }).from(promotions).where(where),
     ])
     const pagination = { total: Number(total), page, limit, totalPages: Math.ceil(Number(total) / limit) }
-    return NextResponse.json({ success: true, data, promotions: data, pagination })
+    const normalizedData = data.map((promotion) => ({ ...promotion, bannerUrl: normalizeR2MediaUrl(promotion.bannerUrl) }))
+    return NextResponse.json({ success: true, data: normalizedData, promotions: normalizedData, pagination })
   } catch (error) {
     return errorResponse(error)
   }

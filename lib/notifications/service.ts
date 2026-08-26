@@ -2,18 +2,29 @@
  * Module: Notification service
  * Purpose: Persist admin in-app alerts and send optional promotion email alerts.
  * Used by: Promotion, redemption, and scheduling route handlers.
- * Dependencies: Drizzle notifications schema and Resend SDK.
+ * Dependencies: Clerk Backend API, Drizzle notifications schema, and Resend SDK.
  * Public functions: notifyAdmins(), sendPromotionEmail().
- * Side effects: Writes notifications to PostgreSQL and may call Resend over HTTPS.
+ * Side effects: Reads Clerk admin users, writes notifications to PostgreSQL, and may call Resend over HTTPS.
  */
+import { clerkClient } from '@clerk/nextjs/server'
 import { Resend } from 'resend'
 import { db } from '@/lib/db'
 import { notifications } from '@/lib/db/schema'
 
-const adminIds = () => (process.env.ADMIN_NOTIFICATION_USER_IDS ?? '').split(',').map((id) => id.trim()).filter(Boolean)
+async function adminIds() {
+  const configuredIds = (process.env.ADMIN_NOTIFICATION_USER_IDS ?? '').split(',').map((id) => id.trim()).filter((id) => id.startsWith('user_'))
+  try {
+    const response = await (await clerkClient()).users.getUserList({ limit: 100 })
+    const clerkAdminIds = response.data.filter((user) => user.publicMetadata.role === 'admin').map((user) => user.id)
+    return [...new Set([...configuredIds, ...clerkAdminIds])]
+  } catch (error) {
+    console.error('Unable to resolve Clerk admin notification recipients:', error)
+    return configuredIds
+  }
+}
 
 export async function notifyAdmins(input: { type: string; title: string; message: string; href?: string }) {
-  const ids = adminIds()
+  const ids = await adminIds()
   if (!ids.length) return
   await db.insert(notifications).values(ids.map((userId) => ({ ...input, userId })))
 }

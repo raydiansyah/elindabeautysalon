@@ -1,323 +1,117 @@
-# Elynd Beauty Salon - Landing Page & CMS
+<!--
+Module: Elynd Beauty Salon project documentation
+Purpose: Explain the product, local setup, validation, deployment, and release conventions.
+Used by: Developers, release operators, and salon administrators.
+Dependencies: Next.js, Clerk, Neon PostgreSQL, Drizzle ORM, Cloudflare R2, Resend, and Vercel.
+Public functions: None; documentation only.
+Side effects: Commands documented here may install dependencies, migrate the database, or deploy the application when explicitly run.
+-->
 
-Landing page modern untuk beauty salon dengan admin panel CMS, dibangun dengan Next.js 15, Tailwind CSS v4, Drizzle ORM, dan Neon Database.
+# Elynd Beauty Salon
 
-## 🚀 Fitur Utama
+Website publik dan admin CMS untuk mengelola promosi, redemption, layanan, konten salon, notifikasi, dan statistik bisnis.
 
-### Landing Page
-- ✅ Desain modern dengan tema violet-black luxury
-- ✅ Fully responsive (mobile, tablet, desktop)
-- ✅ Smooth scroll navigation
-- ✅ Animasi scroll-triggered dengan Framer Motion
-- ✅ 10 section: Hero, About, Services, Pricing, Gallery, Social Media, Location, Contact, Footer
-- ✅ WhatsApp floating button
-- ✅ Instagram & TikTok feed integration
-- ✅ Google Maps embed
-- ✅ Contact form dengan validasi
+## Stack
 
-### Admin CMS Panel
-- ✅ Authentication dengan NextAuth.js
-- ✅ **HttpOnly Cookies** (proteksi XSS)
-- ✅ **Secure Flag** (HTTPS only di production)
-- ✅ **SameSite Lax** (proteksi CSRF)
-- ✅ Dashboard dengan statistik
-- ✅ Kelola layanan (CRUD services)
-- ✅ Kelola harga (CRUD pricing tiers)
-- ✅ Kelola galeri (upload/delete images)
-- ✅ Kelola konten halaman
-- ✅ Kelola informasi bisnis & jam buka
-- ✅ Protected routes dengan middleware
+- Next.js 16 App Router dan Route Handlers
+- React 19, Tailwind CSS v4, Framer Motion, Lucide React
+- Clerk untuk authentication dan RBAC (`admin`, `karyawan`, `member`)
+- Neon PostgreSQL dengan Drizzle ORM
+- Cloudflare R2 untuk banner image melalui presigned upload
+- Resend atau SMTP untuk email notifikasi
+- Vercel untuk hosting dan cron jobs
 
-## 🛠️ Tech Stack
+Vercel Analytics, OpenTelemetry, external uptime monitoring, operational alerts, automated backup, integration tests, dan E2E tests tidak termasuk fase pertama sesuai PRD yang disetujui.
 
-### Frontend
-- **Framework**: Next.js 15+ (App Router)
-- **Styling**: Tailwind CSS v4
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Fonts**: Playfair Display + Inter (Google Fonts)
+## Fitur
 
-### Backend
-- **ORM**: Drizzle ORM
-- **Database**: Neon PostgreSQL (serverless)
-- **Authentication**: NextAuth.js (Credentials provider)
-- **Password Hashing**: bcryptjs
+- Landing page publik promo aktif, filter, countdown, dan share WhatsApp.
+- Admin dashboard dengan statistik promo, redemption, conversion rate, dan export CSV.
+- CRUD promo: percentage, fixed, buy X get Y, free service, dan bundle.
+- Redemption atomik dengan quota protection dan histori transaksi.
+- Clerk webhook untuk sinkronisasi user dan role.
+- Settings salon, notifikasi in-app/email, audit log, rate limiting, dan structured request logs.
 
-## 📋 Prerequisites
+## Prasyarat
 
-Sebelum memulai, pastikan Anda telah menginstall:
-- Node.js 18+ 
-- npm atau yarn atau pnpm
-- Akun [Neon Database](https://neon.tech) (gratis)
+- Node.js 20+
+- npm
+- Neon PostgreSQL
+- Clerk application
+- Cloudflare R2 bucket jika upload banner digunakan
 
-## 🚀 Quick Start
-
-### 1. Setup Neon Database
-
-1. Daftar di [Neon](https://neon.tech) (gratis)
-2. Buat project baru
-3. Pilih region terdekat (Singapore/AWS recommended)
-4. Copy connection string dari dashboard
-   ```
-   postgres://user:password@ep-xxx.region.aws.neon.tech/dbname?sslmode=require
-   ```
-
-### 2. Install Dependencies
+## Setup lokal
 
 ```bash
 npm install
-```
-
-### 3. Setup Environment Variables
-
-Copy file `.env.example` menjadi `.env.local`:
-
-```bash
 cp .env.example .env.local
 ```
 
-Edit `.env.local` dan isi dengan nilai Anda:
+Isi environment variable server-side di `.env.local`. Minimal development membutuhkan `DATABASE_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, dan `CLERK_SECRET_KEY`. Untuk fitur tambahan, lihat `.env.example`.
 
-```env
-# Database - Ganti dengan connection string Neon Anda
-DATABASE_URL="postgres://user:password@ep-xxx.region.aws.neon.tech/dbname?sslmode=require"
-
-# NextAuth.js (generate secret: openssl rand -base64 32)
-AUTH_SECRET="your-secret-key-here"
-AUTH_URL="http://localhost:3000"
-
-# Social Media Widget
-INSTAGRAM_WIDGET_ID="your-elfsight-widget-id"
-TIKTOK_WIDGET_ID="your-elfsight-widget-id"
-
-# Google Maps
-GOOGLE_MAPS_EMBED_URL="https://www.google.com/maps/embed?pb=your-url"
-
-# WhatsApp (format: 62xxx tanpa + atau 0)
-WHATSAPP_NUMBER="6281234567890"
-```
-
-### 4. Run Database Migrations
-
-```bash
-npm run db:migrate
-```
-
-### 5. Seed Database (Isi Data Awal)
-
-```bash
-npm run db:seed
-```
-
-Ini akan membuat:
-- Admin user (email: admin@elynd.com, password: admin123)
-- 8 layanan default
-- 3 pricing tiers
-- Konten halaman default
-- Informasi bisnis default
-- Sample galeri
-
-### 6. Start Development Server
+Jalankan aplikasi:
 
 ```bash
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000) di browser.
+Buka [http://localhost:3000](http://localhost:3000). Admin login tersedia di `/admin/login`.
 
-## 📁 Struktur Folder
-
-```
-elynd-beauty-salon/
-├── app/
-│   ├── layout.tsx              # Root layout + fonts
-│   ├── page.tsx                # Landing page
-│   ├── globals.css             # Tailwind + custom styles
-│   ├── admin/
-│   │   ├── login/page.tsx      # Admin login
-│   │   ├── dashboard/page.tsx  # Admin dashboard
-│   │   ├── services/page.tsx   # Kelola layanan
-│   │   ├── pricing/page.tsx    # Kelola harga
-│   │   ├── gallery/page.tsx    # Kelola galeri
-│   │   ├── content/page.tsx    # Kelola konten
-│   │   └── settings/page.tsx   # Pengaturan
-│   └── api/
-│       ├── auth/               # NextAuth routes
-│       ├── services/           # CRUD services API
-│       ├── pricing/            # CRUD pricing API
-│       ├── gallery/            # CRUD gallery API
-│       ├── content/            # Site content API
-│       └── business-info/      # Business info API
-├── components/
-│   ├── landing/                # Landing page components
-│   └── admin/                  # Admin panel components
-├── lib/
-│   ├── db/
-│   │   ├── index.ts            # Drizzle instance + Neon connection
-│   │   ├── schema.ts           # Database schema
-│   │   ├── seed.ts             # Seed script
-│   │   └── migrations/         # Auto-generated migrations
-│   ├── auth.ts                 # NextAuth configuration
-│   ├── constants.ts            # Static data
-│   └── utils.ts                # Helper functions
-├── middleware.ts                # Auth middleware
-├── drizzle.config.ts           # Drizzle configuration
-└── package.json
-```
-
-## 🎨 Design System
-
-### Color Palette
-```css
-Primary:        #7C3AED → #A855F7 (Violet gradient)
-Background:     #0A0A0A (Black)
-Surface:        #1E1B2E, #2D2A3E (Dark gray)
-Accent Gold:    #F59E0B
-Accent Rose:    #FB7185
-Text Muted:     #A1A1AA, #D4D4D8
-Border:         #3F3C5A
-```
-
-### Typography
-- **Headings**: Playfair Display (elegant, luxury)
-- **Body**: Inter (modern, readable)
-
-## 🔐 Default Admin Credentials
-
-Setelah menjalankan seed script:
-- **Email**: admin@elynd.com
-- **Password**: admin123
-
-⚠️ **PENTING**: Ganti password setelah login pertama!
-
-## 📝 Database Commands
+## Database
 
 ```bash
-# Generate migration dari schema changes
-npm run db:generate
-
-# Jalankan migrations
-npm run db:migrate
-
-# Push schema langsung (development only)
-npm run db:push
-
-# Buka Drizzle Studio (GUI database)
-npm run db:studio
-
-# Seed database dengan data awal
-npm run db:seed
+npm run db:generate  # Generate migration dari perubahan schema
+npm run db:migrate   # Jalankan migration committed
+npm run db:push      # Development only; jangan gunakan untuk production
+npm run db:seed      # Seed data awal
+npm run db:studio    # Buka Drizzle Studio
 ```
 
-## 🌐 Deployment
+Production memakai migration committed melalui `npm run db:migrate`. Backup otomatis dan point-in-time recovery tidak dijanjikan pada fase pertama.
 
-### Deploy ke Vercel
-
-1. Push code ke GitHub
-2. Buka [Vercel](https://vercel.com)
-3. Import repository
-4. Tambah environment variables di Vercel settings
-5. Deploy
-
-Environment variables yang diperlukan:
-- `DATABASE_URL`
-- `AUTH_SECRET`
-- `AUTH_URL` (ganti dengan URL production)
-- `WHATSAPP_NUMBER`
-- `INSTAGRAM_WIDGET_ID` (opsional)
-- `TIKTOK_WIDGET_ID` (opsional)
-- `GOOGLE_MAPS_EMBED_URL` (opsional)
-
-## 🎯 Social Media Integration
-
-### Instagram Feed (Elfsight)
-1. Daftar di [Elfsight](https://elfsight.com)
-2. Buat Instagram Feed widget
-3. Copy Widget ID
-4. Paste ke `INSTAGRAM_WIDGET_ID` di `.env.local`
-
-### TikTok Feed
-1. Buat TikTok Feed widget di Elfsight atau layanan serupa
-2. Copy Widget ID
-3. Paste ke `TIKTOK_WIDGET_ID` di `.env.local`
-
-## 🛠️ Development Scripts
+## Quality checks
 
 ```bash
-npm run dev          # Start development server
-npm run build        # Build untuk production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run db:generate  # Generate Drizzle migration
-npm run db:migrate   # Run Drizzle migration
-npm run db:studio    # Open Drizzle Studio
-npm run db:push      # Push schema ke database
-npm run db:seed      # Seed database
+npm run version:check
+npm run lint
+npm test
+npx tsc --noEmit
+npm run build
 ```
 
-## 🔒 Keamanan (Security)
+CI GitHub Actions menjalankan seluruh pemeriksaan tersebut pada push dan pull request. Build memakai `next build --webpack` untuk hasil yang konsisten di runner CI.
 
-### Cookie Configuration
+## Semantic versioning
 
-NextAuth dikonfigurasi dengan keamanan maksimal:
+Versi proyek mengikuti [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`.
 
-```typescript
-cookies: {
-  sessionToken: {
-    name: `next-auth.session-token`,
-    options: {
-      httpOnly: true,              // Tidak bisa diakses via JavaScript
-      secure: process.env.NODE_ENV === 'production',  // HTTPS only
-      sameSite: 'lax',             // Proteksi CSRF
-      path: '/',
-    },
-  },
-},
-```
+- `PATCH`: bug fix yang backward-compatible.
+- `MINOR`: fitur baru yang backward-compatible.
+- `MAJOR`: perubahan breaking.
 
-**Keuntungan:**
-- ✅ **HttpOnly**: Token tidak bisa dibaca via JavaScript (proteksi XSS attacks)
-- ✅ **Secure Flag**: Cookie hanya dikirim via HTTPS di production
-- ✅ **SameSite Lax**: Proteksi terhadap CSRF attacks
+Versi canonical berada di `package.json`. Release harus menggunakan tag yang sama, misalnya `package.json` `1.2.0` dipublish dengan tag `v1.2.0`. Workflow release menolak tag yang tidak cocok.
 
-### Password Security
+## Deployment
 
-- ✅ **bcryptjs** dengan salt rounds 10
-- ✅ Password tidak pernah disimpan dalam plain text
-- ✅ Hash yang aman dan tidak reversible
+1. Push branch atau pull request ke GitHub.
+2. Pastikan CI green.
+3. Hubungkan repository ke Vercel dan isi environment variables production.
+4. Jalankan migration production melalui proses release yang disetujui.
+5. Smoke-test landing page, Clerk login, dashboard, dan redemption.
 
-### Best Practices
+Rollback aplikasi dilakukan melalui Vercel Instant Rollback. Panduan lengkap tersedia di [docs/rollback-strategy.md](docs/rollback-strategy.md); target SLO ada di [docs/slo.md](docs/slo.md).
 
-1. **AUTH_SECRET**: Generate dengan `openssl rand -base64 32`
-2. **Environment Variables**: Tidak pernah commit `.env.local` ke git
-3. **HTTPS**: Wajib di production (secure flag aktif)
-4. **Middleware**: Proteksi `/admin/*` routes
+## Scripts
 
-## 🔧 Troubleshooting
+| Command | Fungsi |
+| --- | --- |
+| `npm run dev` | Development server |
+| `npm run lint` | ESLint |
+| `npm test` | Unit tests Vitest |
+| `npm run version:check` | Validasi versi SemVer |
+| `npm run build` | Production build |
+| `npm run db:migrate` | Jalankan Drizzle migrations |
 
-### Database Connection Error
-- Pastikan `DATABASE_URL` di `.env.local` benar
-- Pastikan IP Anda diizinkan di Neon dashboard
-- Cek koneksi dengan: `npm run db:push`
+## Security
 
-### NextAuth Error
-- Pastikan `AUTH_SECRET` sudah di-set (generate: `openssl rand -base64 32`)
-- Pastikan `AUTH_URL` benar
-
-### Build Error
-- Hapus `.next` folder dan jalankan `npm run build` ulang
-- Pastikan semua dependencies terinstall: `npm install`
-
-## 📄 License
-
-MIT License
-
-## 👥 Support
-
-Untuk pertanyaan atau bantuan:
-- Email: admin@elynd.com
-- WhatsApp: +62 812-3456-7890
-
----
-
-Dibuat dengan ❤️ untuk Elynd Beauty Salon
+Jangan commit `.env.local` atau secret provider. Clerk mengelola session cookie; API melakukan authorization berbasis role. Request logs tidak mencatat token, cookie, query string, atau request body.

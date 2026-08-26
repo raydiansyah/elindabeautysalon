@@ -1,5 +1,5 @@
 # Module: Continuous integration workflow
-# Purpose: Validate lint, TypeScript, and production build on pushes and pull requests.
+# Purpose: Validate SemVer, lint, unit tests, TypeScript, and production build on pushes and pull requests.
 # Used by: GitHub Actions; Vercel Git integration creates preview deployments separately.
 # Dependencies: Node.js, npm lockfile, repository environment configuration for build.
 # Public functions: None; workflow jobs only.
@@ -26,6 +26,8 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      - run: npm run version:check
       - run: npm run lint
+      - run: npm test
       - run: npx tsc --noEmit
       - run: npx next build --webpack

@@ -1,26 +1,77 @@
+/**
+ * Module: Global design tokens and base styles
+ * Purpose: Define salon theme variables, typography fallbacks, and shared CSS.
+ * Used by: Root layout and all public/admin routes.
+ * Dependencies: Tailwind CSS v4.
+ * Public functions: None; stylesheet declarations only.
+ * Side effects: Applies global styles to the document.
+ */
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --primary: #7c3aed;
+  --primary-light: #a855f7;
+  --secondary: #1a1a1a;
+  --surface: #1e1b2e;
+  --surface-light: #2d2a3e;
+  --accent-gold: #f59e0b;
+  --accent-rose: #fb7185;
+  --text-muted: #a1a1aa;
+  --text-light: #d4d4d8;
+  --border: #3f3c5a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-secondary: var(--secondary);
+  --color-surface: var(--surface);
+  --color-surface-light: var(--surface-light);
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-rose: var(--accent-rose);
+  --color-text-muted: var(--text-muted);
+  --color-text-light: var(--text-light);
+  --color-border: var(--border);
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-display: Georgia, ui-serif, serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-light);
+}
+
+/* Selection color */
+::selection {
+  background: var(--primary);
+  color: white;
 }

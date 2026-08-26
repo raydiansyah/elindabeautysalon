@@ -1,0 +1,31 @@
+# Module: Continuous integration workflow
+# Purpose: Validate lint, TypeScript, and production build on pushes and pull requests.
+# Used by: GitHub Actions; Vercel Git integration creates preview deployments separately.
+# Dependencies: Node.js, npm lockfile, repository environment configuration for build.
+# Public functions: None; workflow jobs only.
+# Side effects: Consumes CI minutes and produces build/test logs; does not deploy or mutate production data.
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - run: npx next build --webpack

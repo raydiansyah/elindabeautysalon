@@ -18,9 +18,7 @@ export default function AdminLogin() {
       <div className="relative z-10 grid w-full max-w-5xl overflow-hidden border border-white/10 bg-background/90 shadow-2xl shadow-black/30 lg:grid-cols-[0.85fr_1.15fr]">
         <div className="hidden flex-col justify-between border-r border-white/10 bg-surface/70 p-10 lg:flex">
           <Link href="/" className="flex items-center gap-3" aria-label="Beauty Salon Elin, kembali ke beranda">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full border border-primary/50 text-lg font-semibold text-primary">
-              E
-            </span>
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#f7efe4]/70 bg-[#f7efe4] p-1.5 shadow-[0_4px_18px_rgba(0,0,0,0.24)]"><img src="/brand/logo.webp" alt="Beauty Salon Elin" className="h-full w-full object-contain" /></span>
             <span className="flex flex-col leading-none">
               <span className="text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-text-muted">Beauty Salon</span>
               <span className="mt-1 font-display text-2xl font-bold text-foreground">Elin</span>
@@ -37,7 +35,7 @@ export default function AdminLogin() {
         <div className="flex flex-col items-center justify-center px-5 py-10 sm:px-10 lg:py-14">
           <div className="mb-8 w-full max-w-md lg:hidden">
             <Link href="/" className="inline-flex items-center gap-3" aria-label="Beauty Salon Elin, kembali ke beranda">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/50 text-base font-semibold text-primary">E</span>
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#f7efe4]/70 bg-[#f7efe4] p-1.5 shadow-[0_4px_18px_rgba(0,0,0,0.24)]"><img src="/brand/logo.webp" alt="Beauty Salon Elin" className="h-full w-full object-contain" /></span>
               <span className="flex flex-col leading-none">
                 <span className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-text-muted">Beauty Salon</span>
                 <span className="mt-1 font-display text-xl font-bold text-foreground">Elin</span>

@@ -9,11 +9,11 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Sparkles, Camera, Music, MessageCircle, ChevronUp } from 'lucide-react'
+import { Camera, Music, MessageCircle, ChevronUp } from 'lucide-react'
 import { useSalonSettings } from './SalonSettingsProvider'
 
 export default function Footer() {
-  const { salonName } = useSalonSettings()
+  const { salonName, logoUrl, instagramUrl, tiktokUrl } = useSalonSettings()
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -25,7 +25,7 @@ export default function Footer() {
           {/* Logo & About */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-8 h-8 text-primary" />
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#f7efe4]/70 bg-[#f7efe4] p-1.5 shadow-[0_4px_18px_rgba(0,0,0,0.24)]"><img src={logoUrl} alt="" aria-hidden="true" className="h-full w-full object-contain" /></span>
               <span className="max-w-[16rem] truncate font-display text-2xl font-bold leading-none text-foreground">{salonName}</span>
             </div>
             <p className="text-text-light mb-6">
@@ -33,7 +33,7 @@ export default function Footer() {
             </p>
             <div className="flex gap-4">
               <a
-                href="https://instagram.com/elyndbeauty"
+                href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-surface/50 rounded-full flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-all"
@@ -42,7 +42,7 @@ export default function Footer() {
                 <Camera className="w-5 h-5" />
               </a>
               <a
-                href="https://tiktok.com/@elyndbeauty"
+                href={tiktokUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-surface/50 rounded-full flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-all"

@@ -33,6 +33,16 @@ export default function Hero() {
     })
   }
 
+  function handleHeroPointerDown(event: PointerEvent<HTMLElement>) {
+    if (event.pointerType === 'mouse') return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    setColorReveal((current) => ({
+      x: ((event.clientX - bounds.left) / bounds.width) * 100,
+      y: ((event.clientY - bounds.top) / bounds.height) * 100,
+      active: !current.active,
+    }))
+  }
+
   useEffect(() => {
     fetch('/api/settings?public=true', { cache: 'no-store' })
       .then((response) => response.json())
@@ -66,7 +76,7 @@ export default function Hero() {
   }, { scope: heroRef })
 
   return (
-    <section ref={heroRef} id="beranda" className="relative isolate min-h-screen overflow-hidden bg-background" onPointerMove={handleHeroPointerMove} onPointerLeave={() => setColorReveal((current) => ({ ...current, active: false }))}>
+    <section ref={heroRef} id="beranda" className="relative isolate min-h-screen overflow-hidden bg-background" onPointerMove={handleHeroPointerMove} onPointerDown={handleHeroPointerDown} onPointerLeave={() => setColorReveal((current) => ({ ...current, active: false }))}>
       <div className="absolute inset-0 bg-[#171014]" />
       <div
         data-hero-visual
@@ -76,7 +86,7 @@ export default function Hero() {
       />
       <div
         data-hero-color
-        className="pointer-events-none absolute inset-[-4%] bg-cover bg-center opacity-90 contrast-125 transition-[clip-path] duration-300 ease-out motion-reduce:transition-none"
+        className="color-reveal-layer pointer-events-none absolute inset-[-4%] bg-cover bg-center opacity-90 contrast-125 transition-[clip-path] duration-500 ease-out motion-reduce:transition-none"
         style={{
           backgroundImage: `url('${imageUrl}')`,
           clipPath: `circle(${colorReveal.active ? '28%' : '0%'} at ${colorReveal.x}% ${colorReveal.y}%)`,

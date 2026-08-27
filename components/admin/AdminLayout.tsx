@@ -100,7 +100,7 @@ export default function AdminLayout({
             {/* Logo */}
             <div className={`border-b border-border transition-all duration-300 ${sidebarCollapsed ? 'lg:px-4 py-4' : 'p-6'}`}>
               <div className="flex items-center gap-2">
-                <Sparkles className="w-8 h-8 text-primary flex-shrink-0" />
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#f7efe4]/70 bg-[#f7efe4] p-1 shadow-[0_4px_18px_rgba(0,0,0,0.24)]"><img src="/brand/logo.webp" alt="Beauty Salon Elin" className="h-full w-full object-contain" /></span>
                 {!sidebarCollapsed && (
                   <h1 className="flex flex-col whitespace-nowrap leading-none text-foreground">
                     <span className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-text-muted">Beauty Salon</span>

@@ -1,6 +1,6 @@
 /**
  * Module: Cursor color reveal image
- * Purpose: Reveal the original image color through a monochrome portfolio image.
+ * Purpose: Reveal the original image color through a monochrome portfolio image on desktop cursor movement and mobile tap.
  * Used by: Public Gallery cards.
  * Dependencies: React pointer events and global reveal accessibility styles.
  * Public functions: ColorRevealImage().
@@ -19,10 +19,20 @@ export default function ColorRevealImage({ src, alt }: { src: string; alt: strin
     setPointer({ x: ((event.clientX - bounds.left) / bounds.width) * 100, y: ((event.clientY - bounds.top) / bounds.height) * 100, active: true })
   }
 
+  function tap(event: PointerEvent<HTMLDivElement>) {
+    if (event.pointerType === 'mouse') return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    setPointer((current) => ({
+      x: ((event.clientX - bounds.left) / bounds.width) * 100,
+      y: ((event.clientY - bounds.top) / bounds.height) * 100,
+      active: !current.active,
+    }))
+  }
+
   return (
-    <div className="relative h-full w-full" onPointerMove={move} onPointerLeave={() => setPointer((current) => ({ ...current, active: false }))}>
+    <div className="relative h-full w-full touch-manipulation" onPointerMove={move} onPointerDown={tap} onPointerLeave={() => setPointer((current) => ({ ...current, active: false }))}>
       <img src={src} alt={alt} className="h-full w-full object-cover grayscale transition-transform duration-500 group-hover:scale-110" />
-      <img src={src} alt="" aria-hidden="true" className="color-reveal-layer pointer-events-none absolute inset-0 h-full w-full object-cover transition-[clip-path,transform] duration-300 ease-out group-hover:scale-110" style={{ clipPath: `circle(${pointer.active ? 24 : 0}% at ${pointer.x}% ${pointer.y}%)` }} />
+      <img src={src} alt="" aria-hidden="true" className="color-reveal-layer pointer-events-none absolute inset-0 h-full w-full object-cover transition-[clip-path,transform] duration-500 ease-out group-hover:scale-110" style={{ clipPath: `circle(${pointer.active ? 42 : 0}% at ${pointer.x}% ${pointer.y}%)` }} />
     </div>
   )
 }

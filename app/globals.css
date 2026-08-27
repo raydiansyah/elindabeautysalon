@@ -80,7 +80,7 @@ html {
   will-change: clip-path, transform;
 }
 
-@media (hover: none), (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
   .color-reveal-layer {
     clip-path: circle(100% at 50% 50%) !important;
     transition: none !important;

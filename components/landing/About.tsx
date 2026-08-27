@@ -1,6 +1,6 @@
 /**
  * Module: About Elynd
- * Purpose: Explain the salon point of view and service experience.
+ * Purpose: Explain the salon point of view and service experience from editable public settings.
  * Used by: Public landing page route (app/page.tsx).
  * Dependencies: Framer Motion, Lucide icons, public settings API, salon settings context, remote salon image.
  * Public functions: About()
@@ -14,18 +14,19 @@ import { useEffect, useRef, useState } from 'react'
 import { Award, Users, Star, Trophy } from 'lucide-react'
 import { useSalonSettings } from './SalonSettingsProvider'
 
-const stats = [
-  { icon: Award, value: '10+', label: 'Tahun Pengalaman' },
-  { icon: Users, value: '5000+', label: 'Klien Puas' },
-  { icon: Star, value: '15+', label: 'Stylist Ahli' },
-  { icon: Trophy, value: '20+', label: 'Penghargaan' },
-]
+const statIcons = [Award, Users, Star, Trophy]
 
 export default function About() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
   const [imageUrl, setImageUrl] = useState('https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=800&fit=crop')
-  const { salonName } = useSalonSettings()
+  const { salonName, aboutTitle, aboutHighlight, aboutDescription, aboutStat1Value, aboutStat1Label, aboutStat2Value, aboutStat2Label, aboutStat3Value, aboutStat3Label, aboutStat4Value, aboutStat4Label } = useSalonSettings()
+  const stats = [
+    { icon: statIcons[0], value: aboutStat1Value, label: aboutStat1Label },
+    { icon: statIcons[1], value: aboutStat2Value, label: aboutStat2Label },
+    { icon: statIcons[2], value: aboutStat3Value, label: aboutStat3Label },
+    { icon: statIcons[3], value: aboutStat4Value, label: aboutStat4Label },
+  ]
 
   useEffect(() => {
     fetch('/api/settings?public=true', { cache: 'no-store' })
@@ -63,13 +64,11 @@ export default function About() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">
-              Tentang{' '}
-              <span className="text-primary">Elynd</span>
+              {aboutTitle}{' '}
+              <span className="text-primary">{aboutHighlight}</span>
             </h2>
             <p className="text-text-light text-lg leading-relaxed mb-8">
-              {salonName} adalah salon kecantikan profesional dengan pengalaman lebih dari 10 tahun.
-              Kami berkomitmen memberikan layanan terbaik dengan produk berkualitas tinggi dan tim stylist 
-              yang terlatih untuk membuat Anda tampil cantik dan percaya diri.
+              {aboutDescription}
             </p>
 
             {/* Stats */}

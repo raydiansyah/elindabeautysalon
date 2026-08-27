@@ -6,7 +6,7 @@
  * Public functions: validateSettingsInput().
  * Side effects: None.
  */
-const allowedFields = new Set(['salonName', 'address', 'whatsapp', 'openingHours', 'logoUrl', 'heroImageUrl', 'aboutImageUrl', 'theme', 'seoTitle', 'seoDescription'])
+const allowedFields = new Set(['salonName', 'address', 'whatsapp', 'openingHours', 'logoUrl', 'heroImageUrl', 'aboutImageUrl', 'aboutTitle', 'aboutHighlight', 'aboutDescription', 'aboutStat1Value', 'aboutStat1Label', 'aboutStat2Value', 'aboutStat2Label', 'aboutStat3Value', 'aboutStat3Label', 'aboutStat4Value', 'aboutStat4Label', 'instagramUrl', 'instagramPostUrl', 'tiktokUrl', 'tiktokVideoUrl', 'theme', 'seoTitle', 'seoDescription'])
 
 export function validateSettingsInput(input: unknown): { value?: Record<string, string>; error?: string } {
   if (!input || typeof input !== 'object' || Array.isArray(input)) return { error: 'Format settings tidak valid' }
@@ -21,6 +21,17 @@ export function validateSettingsInput(input: unknown): { value?: Record<string, 
   if ('openingHours' in result && result.openingHours && !/^(?:[A-Za-zÀ-ÿ]+(?:-[A-Za-zÀ-ÿ]+)?,\s*)?([01]\d|2[0-3]):[0-5]\d\s*-\s*([01]\d|2[0-3]):[0-5]\d$/.test(result.openingHours)) return { error: 'Format jam operasional harus HH:mm-HH:mm' }
   for (const field of ['heroImageUrl', 'aboutImageUrl']) {
     if (field in result && result[field] && !result[field].startsWith('/') && !/^https?:\/\//i.test(result[field])) return { error: `URL gambar ${field} tidak valid` }
+  }
+  for (const field of ['instagramUrl', 'instagramPostUrl', 'tiktokUrl', 'tiktokVideoUrl']) {
+    if (!(field in result) || !result[field]) continue
+    try {
+      const url = new URL(result[field])
+      const hostname = url.hostname.toLowerCase().replace(/^www\./, '')
+      const expectedHost = field.startsWith('instagram') ? 'instagram.com' : 'tiktok.com'
+      if (url.protocol !== 'https:' || hostname !== expectedHost) return { error: `URL ${field} harus berasal dari ${expectedHost}` }
+    } catch {
+      return { error: `URL ${field} tidak valid` }
+    }
   }
   return { value: result }
 }

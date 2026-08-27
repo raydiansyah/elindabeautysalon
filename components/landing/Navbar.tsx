@@ -10,14 +10,14 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Sparkles } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { NAVIGATION_LINKS } from '@/lib/constants'
 import { useSalonSettings } from './SalonSettingsProvider'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const { salonName } = useSalonSettings()
+  const { salonName, logoUrl } = useSalonSettings()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,7 +46,7 @@ export default function Navbar() {
             aria-label={`${salonName}, kembali ke beranda`}
             className="flex min-w-0 items-center gap-2"
           >
-            <Sparkles className="h-7 w-7 shrink-0 text-primary sm:h-8 sm:w-8" />
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#f7efe4]/70 bg-[#f7efe4] p-1 shadow-[0_4px_18px_rgba(0,0,0,0.24)] sm:h-12 sm:w-12 sm:p-1.5"><img src={logoUrl} alt="" aria-hidden="true" className="h-full w-full object-contain" /></span>
             <span className="max-w-[12rem] truncate font-display text-xl font-bold leading-none text-foreground sm:max-w-[16rem] sm:text-2xl">{salonName}</span>
           </a>
 

@@ -2,7 +2,7 @@
  * Module: Salon Location Section
  * Purpose: Render the salon map embed, contact details, and opening hours.
  * Used by: Public landing page at / via app/page.tsx.
- * Dependencies: Framer Motion, Lucide icons, OPENING_HOURS constants, public map env.
+ * Dependencies: Framer Motion, Lucide icons, OPENING_HOURS constants, public salon settings.
  * Public functions: Location()
  * Side effects: Loads Google Maps in a lazy iframe; no application data writes.
  */
@@ -13,12 +13,13 @@ import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { MapPin, Clock, Phone, Mail, MessageCircle } from 'lucide-react'
 import { OPENING_HOURS } from '@/lib/constants'
+import { useSalonSettings } from './SalonSettingsProvider'
 
 export default function Location() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
-  const googleMapsUrl = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL
+  const { mapsEmbedUrl } = useSalonSettings()
 
   return (
     <section id="lokasi" className="py-20 md:py-32">
@@ -48,9 +49,9 @@ export default function Location() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="rounded-2xl overflow-hidden border border-border"
           >
-            {googleMapsUrl && googleMapsUrl !== 'https://www.google.com/maps/embed?pb=your-maps-embed-url' ? (
+            {mapsEmbedUrl && mapsEmbedUrl !== 'https://www.google.com/maps/embed?pb=your-maps-embed-url' ? (
               <iframe
-                src={googleMapsUrl}
+                src={mapsEmbedUrl}
                 title="Lokasi Beauty Salon ELIN di Google Maps"
                 width="100%"
                 height="100%"

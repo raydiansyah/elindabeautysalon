@@ -24,6 +24,7 @@ export async function GET(request: Request) {
     if (!isPublic) await requireOperationalUser()
     const [record] = await db.select().from(settings).where(eq(settings.key, SETTINGS_KEY)).limit(1)
     const value = { ...(record?.value ?? {}) }
+    if (typeof value.mapsEmbedUrl !== 'string' || !value.mapsEmbedUrl) value.mapsEmbedUrl = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL || process.env.GOOGLE_MAPS_EMBED_URL || ''
     for (const field of ['logoUrl', 'heroImageUrl', 'aboutImageUrl']) {
       if (typeof value[field] === 'string') value[field] = normalizeR2MediaUrl(value[field])
     }

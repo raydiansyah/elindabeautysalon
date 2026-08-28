@@ -13,6 +13,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 export type SalonSettings = {
   salonName: string
   logoUrl: string
+  mapsEmbedUrl: string
   aboutTitle: string
   aboutHighlight: string
   aboutDescription: string
@@ -33,6 +34,7 @@ export type SalonSettings = {
 const defaultSettings: SalonSettings = {
   salonName: 'Beauty Salon',
   logoUrl: '/brand/logo.webp',
+  mapsEmbedUrl: '',
   aboutTitle: 'Tentang',
   aboutHighlight: 'Beauty Salon Elin',
   aboutDescription: 'Salon kecantikan profesional dengan pengalaman dan tim stylist terlatih untuk membuat Anda tampil cantik dan percaya diri.',
@@ -58,6 +60,7 @@ export function SalonSettingsProvider({ children }: { children: React.ReactNode 
         setSettings({
           salonName: typeof incoming.salonName === 'string' && incoming.salonName.trim() ? incoming.salonName.trim() : defaultSettings.salonName,
           logoUrl: typeof incoming.logoUrl === 'string' && incoming.logoUrl.trim() ? incoming.logoUrl : defaultSettings.logoUrl,
+          mapsEmbedUrl: typeof incoming.mapsEmbedUrl === 'string' ? incoming.mapsEmbedUrl : defaultSettings.mapsEmbedUrl,
           aboutTitle: typeof incoming.aboutTitle === 'string' ? incoming.aboutTitle : defaultSettings.aboutTitle,
           aboutHighlight: typeof incoming.aboutHighlight === 'string' ? incoming.aboutHighlight : defaultSettings.aboutHighlight,
           aboutDescription: typeof incoming.aboutDescription === 'string' ? incoming.aboutDescription : defaultSettings.aboutDescription,

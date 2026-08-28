@@ -13,33 +13,33 @@ import { useEffect, useRef } from 'react'
 import { Camera, ExternalLink, Music } from 'lucide-react'
 import { useSalonSettings } from './SalonSettingsProvider'
 
-function loadScript(id: string, src: string, onLoad: () => void) {
-  const existing = document.getElementById(id)
+function getInstagramPostType(url: string) {
+  return url.match(/instagram\.com\/(p|tv)\/[^/?#]+/i)?.[1] ?? null
+}
+
+function loadInstagramEmbedScript(onLoad: () => void) {
+  const existing = document.getElementById('instagram-embed-script')
   if (existing) {
     onLoad()
     return
   }
   const script = document.createElement('script')
-  script.id = id
+  script.id = 'instagram-embed-script'
   script.async = true
-  script.src = src
+  script.src = 'https://www.instagram.com/embed.js'
   script.addEventListener('load', onLoad, { once: true })
   document.body.appendChild(script)
 }
 
 function InstagramEmbed({ url }: { url: string }) {
   useEffect(() => {
-    loadScript('instagram-embed-script', 'https://www.instagram.com/embed.js', () => {
+    loadInstagramEmbedScript(() => {
       const instagram = window as Window & { instgrm?: { Embeds?: { process: () => void } } }
       instagram.instgrm?.Embeds?.process()
     })
   }, [url])
 
-  return (
-    <blockquote className="instagram-media min-h-[22rem] w-full overflow-hidden rounded-xl border border-border bg-background" data-instgrm-permalink={url} data-instgrm-version="14">
-      <a href={url} target="_blank" rel="noopener noreferrer" className="flex min-h-[22rem] items-center justify-center p-6 text-center text-text-muted hover:text-primary">Buka post Instagram</a>
-    </blockquote>
-  )
+  return <blockquote className="instagram-media min-h-[22rem] w-full overflow-hidden rounded-xl border border-border bg-background" data-instgrm-permalink={url} data-instgrm-version="14"><a href={url} target="_blank" rel="noopener noreferrer" className="flex min-h-[22rem] items-center justify-center p-6 text-center text-text-muted hover:text-primary">Buka post Instagram</a></blockquote>
 }
 
 function getTikTokVideoId(url: string) {
@@ -47,17 +47,17 @@ function getTikTokVideoId(url: string) {
 }
 
 function getTikTokUsername(url: string) {
-  return url.match(/tiktok\.com\/@([^/?#]+)/i)?.[1] ?? null
+  try {
+    const decoded = decodeURIComponent(url)
+    return decoded.match(/tiktok\.com\/@([^/?#]+)/i)?.[1] ?? null
+  } catch {
+    return url.match(/tiktok\.com\/@([^/?#]+)/i)?.[1] ?? null
+  }
 }
 
 function TikTokEmbed({ profileUrl, videoUrl }: { profileUrl: string; videoUrl: string }) {
   const videoId = getTikTokVideoId(videoUrl)
   const username = getTikTokUsername(profileUrl)
-
-  useEffect(() => {
-    if (!videoId && !username) return
-    loadScript('tiktok-embed-script', 'https://www.tiktok.com/embed.js', () => undefined)
-  }, [profileUrl, videoId, username])
 
   if (videoId) {
     return <iframe src={`https://www.tiktok.com/player/v1/${videoId}?description=1&music_info=1`} className="aspect-[9/14] max-h-[34rem] w-full rounded-xl border-0 bg-black" allow="fullscreen" title="TikTok video" />
@@ -65,9 +65,7 @@ function TikTokEmbed({ profileUrl, videoUrl }: { profileUrl: string; videoUrl: s
 
   if (username) {
     return (
-      <blockquote className="tiktok-embed min-h-[28rem] w-full overflow-hidden rounded-xl border border-border bg-background" cite={profileUrl} data-unique-id={username} data-embed-type="creator">
-        <section className="flex min-h-[28rem] items-center justify-center p-6 text-center text-text-muted"><a href={profileUrl} target="_blank" rel="noopener noreferrer">@{username}</a></section>
-      </blockquote>
+      <a href={profileUrl} target="_blank" rel="noopener noreferrer" className="flex min-h-[28rem] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-background p-6 text-center transition-colors hover:border-primary hover:bg-primary/5"><Music className="mb-4 h-10 w-10 text-primary" /><span className="font-semibold">@{username}</span><span className="mt-2 text-sm text-text-muted">Buka profil TikTok untuk melihat video terbaru.</span></a>
     )
   }
 
@@ -97,7 +95,7 @@ export default function SocialFeed() {
               </div>
               <ExternalLink className="h-4 w-4 shrink-0 text-text-muted" />
             </div>
-            {instagramPostUrl ? <InstagramEmbed url={instagramPostUrl} /> : <div className="flex min-h-[22rem] items-center justify-center rounded-xl border border-dashed border-border p-6 text-center text-sm text-text-muted">Tambahkan URL post atau Reel Instagram di Pengaturan untuk menampilkan embed.</div>}
+            {getInstagramPostType(instagramPostUrl) ? <InstagramEmbed url={instagramPostUrl} /> : <div className="flex min-h-[22rem] flex-col items-center justify-center rounded-xl border border-dashed border-border p-6 text-center"><Camera className="mb-4 h-10 w-10 text-primary" /><p className="font-semibold">Instagram siap ditampilkan</p><p className="mt-2 text-sm text-text-muted">Gunakan URL post Instagram biasa (`/p/...`) untuk embed, atau buka profil untuk melihat Reel.</p></div>}
             <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="mt-6 block w-full rounded-full bg-pink-600 py-3 text-center font-semibold text-white transition-colors hover:bg-pink-500">Buka Instagram</a>
           </motion.article>
 

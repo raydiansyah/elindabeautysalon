@@ -1,10 +1,10 @@
 /**
  * Module: About Elynd
- * Purpose: Explain the salon point of view and service experience from editable public settings.
+ * Purpose: Explain the salon point of view with an always-visible, editable brand image.
  * Used by: Public landing page route (app/page.tsx).
  * Dependencies: Framer Motion, Lucide icons, public settings API, salon settings context, remote salon image.
  * Public functions: About()
- * Side effects: Loads a remote image; no data writes.
+ * Side effects: Loads a remote full-colour image; no data writes.
  */
 'use client'
 
@@ -50,7 +50,8 @@ export default function About() {
               <img
                 src={imageUrl}
                 alt={`${salonName} interior`}
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover saturate-110 contrast-105"
+                decoding="async"
               />
             </div>
             {/* Decorative element */}

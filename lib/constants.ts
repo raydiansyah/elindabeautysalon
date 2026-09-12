@@ -14,7 +14,7 @@ export const NAVIGATION_LINKS = [
   { label: 'Layanan', href: '#layanan' },
   { label: 'Kursus', href: '#kursus' },
   { label: 'Lokasi', href: '#lokasi' },
-  { label: 'Kontak', href: '#kontak' },
+  { label: 'WhatsApp', href: '#lokasi' },
 ]
 
 export const SERVICES_PLACEHOLDER = [

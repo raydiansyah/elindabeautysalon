@@ -1,0 +1,23 @@
+<!--
+Module: Architecture decision log
+Purpose: Preserve scoped, non-sensitive implementation decisions and verification outcomes.
+Used by: Repository engineering workflow and maintainers.
+Dependencies: AGENTS.md engineering standards.
+Public functions: None.
+Side effects: Records project delivery decisions.
+-->
+
+## 2026-09-12 — Always-visible marketing imagery
+
+- Decision: Remove the Hero's interaction-gated monochrome colour reveal and keep the Hero and About imagery rendered in full colour by default.
+- Reason: Brand imagery must communicate the salon's visual identity before a visitor interacts with the page.
+- Scope: Landing Hero and About only; the Gallery's optional reveal interaction remains unchanged.
+- Compatibility: Preserve existing dynamic image URLs, responsive layout, reduced-motion behaviour, and scroll animation.
+- Verification: `npx tsc --noEmit` passed; `npm test -- --run` passed (13 tests). `npm run lint` completed with pre-existing repository warnings only and no errors.
+
+## 2026-09-12 — WhatsApp as the public contact path
+
+- Decision: Remove the Contact form from the landing page composition and route booking and course-interest fallbacks to the configured WhatsApp number.
+- Reason: The requested customer journey has one clear, low-friction contact channel.
+- Scope: Landing page composition, Hero, Navbar, Courses, Footer, Location, and navigation labels; the unused Contact component remains available for future reuse but is no longer rendered.
+- Verification: `npx tsc --noEmit` passed; `npm test -- --run` passed (13 tests). `npm run lint` completed with pre-existing repository warnings only and no errors.

@@ -1,10 +1,10 @@
 /**
  * Module: Social media embeds
- * Purpose: Display official Instagram post and TikTok profile/video embeds without owning social APIs.
+ * Purpose: Display official social content with a useful profile fallback when embeds are unavailable.
  * Used by: Public landing page route (app/page.tsx).
  * Dependencies: Framer Motion, Lucide icons, public salon settings, Instagram/TikTok embed scripts.
  * Public functions: SocialFeed().
- * Side effects: Loads third-party embed scripts and remote social content in the browser.
+ * Side effects: Loads third-party embed scripts and remote social content in the browser when configured.
  */
 'use client'
 
@@ -40,6 +40,22 @@ function InstagramEmbed({ url }: { url: string }) {
   }, [url])
 
   return <blockquote className="instagram-media min-h-[22rem] w-full overflow-hidden rounded-xl border border-border bg-background" data-instgrm-permalink={url} data-instgrm-version="14"><a href={url} target="_blank" rel="noopener noreferrer" className="flex min-h-[22rem] items-center justify-center p-6 text-center text-text-muted hover:text-primary">Buka post Instagram</a></blockquote>
+}
+
+function InstagramProfileFallback({ url }: { url: string }) {
+  const handle = url.replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/\/$/, '')
+
+  return (
+    <div className="flex min-h-[18rem] flex-col items-center justify-center rounded-xl border border-border bg-background px-6 py-10 text-center">
+      <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-pink-600 text-white shadow-lg shadow-pink-600/20">
+        <Camera className="h-8 w-8" />
+      </div>
+      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Instagram Beauty Salon Elin</p>
+      <h3 className="mt-3 font-display text-2xl">Karya terbaru ada di sini.</h3>
+      <p className="mt-3 max-w-sm text-sm leading-relaxed text-text-muted">Lihat hasil styling, suasana salon, dan inspirasi kecantikan terbaru dari akun resmi kami.</p>
+      <a href={url} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex rounded-full border border-primary px-5 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-white">Lihat @{handle}</a>
+    </div>
+  )
 }
 
 function getTikTokVideoId(url: string) {
@@ -95,7 +111,7 @@ export default function SocialFeed() {
               </div>
               <ExternalLink className="h-4 w-4 shrink-0 text-text-muted" />
             </div>
-            {getInstagramPostType(instagramPostUrl) ? <InstagramEmbed url={instagramPostUrl} /> : <div className="flex min-h-[22rem] flex-col items-center justify-center rounded-xl border border-dashed border-border p-6 text-center"><Camera className="mb-4 h-10 w-10 text-primary" /><p className="font-semibold">Instagram siap ditampilkan</p><p className="mt-2 text-sm text-text-muted">Gunakan URL post Instagram biasa (`/p/...`) untuk embed, atau buka profil untuk melihat Reel.</p></div>}
+            {getInstagramPostType(instagramPostUrl) ? <InstagramEmbed url={instagramPostUrl} /> : <InstagramProfileFallback url={instagramUrl} />}
             <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="mt-6 block w-full rounded-full bg-pink-600 py-3 text-center font-semibold text-white transition-colors hover:bg-pink-500">Buka Instagram</a>
           </motion.article>
 

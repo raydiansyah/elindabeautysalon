@@ -12,7 +12,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { MapPin, Clock, Phone, Mail, MessageCircle } from 'lucide-react'
-import { OPENING_HOURS } from '@/lib/constants'
+import { OPENING_HOURS, WHATSAPP_NUMBER } from '@/lib/constants'
 import { useSalonSettings } from './SalonSettingsProvider'
 
 export default function Location() {
@@ -117,7 +117,7 @@ export default function Location() {
                 <div>
                   <h3 className="font-semibold mb-1">WhatsApp</h3>
                   <a
-                    href="https://wa.me/6281234567890"
+                    href={`https://wa.me/${WHATSAPP_NUMBER}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-text-light hover:text-primary transition-colors"

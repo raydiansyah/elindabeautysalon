@@ -2,7 +2,7 @@
  * Module: Landing Footer
  * Purpose: Close the public salon experience with navigation, social links, and contact details.
  * Used by: Public landing page route (app/page.tsx).
- * Dependencies: Framer Motion, Lucide icons, public salon settings context.
+ * Dependencies: Framer Motion, Lucide icons, WhatsApp number, public salon settings context.
  * Public functions: Footer()
  * Side effects: Reads the current year and scrolls the browser to the page top.
  */
@@ -10,6 +10,7 @@
 
 import { motion } from 'framer-motion'
 import { Camera, Music, MessageCircle, ChevronUp } from 'lucide-react'
+import { WHATSAPP_NUMBER } from '@/lib/constants'
 import { useSalonSettings } from './SalonSettingsProvider'
 
 export default function Footer() {
@@ -51,7 +52,7 @@ export default function Footer() {
                 <Music className="w-5 h-5" />
               </a>
               <a
-                href="https://wa.me/6281234567890"
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-surface/50 rounded-full flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-all"
@@ -92,8 +93,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#kontak" className="text-text-light hover:text-primary transition-colors">
-                  Kontak
+                <a href="#lokasi" className="text-text-light hover:text-primary transition-colors">
+                  WhatsApp & lokasi
                 </a>
               </li>
             </ul>

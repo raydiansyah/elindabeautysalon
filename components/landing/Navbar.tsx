@@ -2,7 +2,7 @@
  * Module: Landing Navigation
  * Purpose: Provide responsive navigation and booking CTA for the public salon page.
  * Used by: Public landing page route (app/page.tsx).
- * Dependencies: Framer Motion, Lucide icons, NAVIGATION_LINKS, public salon settings context.
+ * Dependencies: Framer Motion, Lucide icons, NAVIGATION_LINKS, WhatsApp number, public salon settings context.
  * Public functions: Navbar()
  * Side effects: Reads window scroll position and controls mobile menu state.
  */
@@ -11,7 +11,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import { NAVIGATION_LINKS } from '@/lib/constants'
+import { NAVIGATION_LINKS, WHATSAPP_NUMBER } from '@/lib/constants'
 import { useSalonSettings } from './SalonSettingsProvider'
 
 export default function Navbar() {
@@ -62,10 +62,12 @@ export default function Navbar() {
               </a>
             ))}
             <a
-              href="#kontak"
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="rounded-full bg-primary px-6 py-2.5 font-medium text-white transition-all duration-200 hover:bg-primary-light hover:shadow-lg hover:shadow-primary/30"
             >
-              Booking Sekarang
+              Booking via WhatsApp
             </a>
           </div>
 
@@ -102,11 +104,13 @@ export default function Navbar() {
                 </a>
               ))}
               <a
-                href="#kontak"
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => setIsOpen(false)}
                 className="block w-full rounded-full bg-primary px-6 py-3 text-center font-medium text-white"
               >
-                Booking Sekarang
+                Booking via WhatsApp
               </a>
             </div>
           </motion.div>

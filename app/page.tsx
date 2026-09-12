@@ -15,7 +15,6 @@ import Courses from '@/components/landing/Courses'
 import Gallery from '@/components/landing/Gallery'
 import SocialFeed from '@/components/landing/SocialFeed'
 import Location from '@/components/landing/Location'
-import Contact from '@/components/landing/Contact'
 import Footer from '@/components/landing/Footer'
 import WhatsAppButton from '@/components/landing/WhatsAppButton'
 import { SalonSettingsProvider } from '@/components/landing/SalonSettingsProvider'
@@ -33,7 +32,6 @@ export default function Home() {
         <Gallery />
         <SocialFeed />
         <Location />
-        <Contact />
       </main>
       <Footer />
       <WhatsAppButton />

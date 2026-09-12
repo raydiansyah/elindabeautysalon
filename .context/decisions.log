@@ -22,6 +22,13 @@ Side effects: Records project delivery decisions.
 - Compatibility: Seed is idempotent for courses and removes the obsolete `#kontak` fallback by allowing the public WhatsApp fallback to handle enrollment.
 - Verification: `npx tsc --noEmit` passed; `npm run lint -- --quiet` passed; `npm test -- --run` passed (13 tests).
 
+## 2026-09-12 — CI database module validation
+
+- Decision: Provide a non-production `DATABASE_URL` placeholder at the CI job level so the Neon client can be constructed during compilation.
+- Reason: GitHub Actions validation has no reason to access the production database, but the current module initializes Neon at import time.
+- Security: The placeholder points to localhost and contains no project secret; production and preview environment variables remain unchanged.
+- Verification: `git diff --check`, `DATABASE_URL=... npx tsc --noEmit`, and `DATABASE_URL=... npm test -- --run` passed (13 tests). The workflow now supplies the placeholder at job scope.
+
 ## 2026-09-12 — Course-specific WhatsApp message
 
 - Decision: Include the course title in the WhatsApp fallback URL when a course has no custom enrollment URL.

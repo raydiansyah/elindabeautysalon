@@ -1,7 +1,7 @@
 # Module: Continuous integration workflow
 # Purpose: Validate SemVer, lint, unit tests, TypeScript, and production build on pushes and pull requests.
 # Used by: GitHub Actions; Vercel Git integration creates preview deployments separately.
-# Dependencies: Node.js, npm dependency metadata, repository environment configuration for build.
+# Dependencies: Node.js, npm dependency metadata, and a non-production database URL placeholder for module validation.
 # Public functions: None; workflow jobs only.
 # Side effects: Consumes CI minutes and produces build/test logs; does not deploy or mutate production data.
 name: CI
@@ -19,6 +19,9 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      # Neon requires a URL while server modules are compiled; CI does not execute database queries.
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

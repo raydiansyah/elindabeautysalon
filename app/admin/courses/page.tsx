@@ -16,7 +16,7 @@ import AdminNotice from '@/components/admin/AdminNotice'
 
 type Course = { id: number; title: string; description: string; instructor: string; level: string; duration: string; schedule: string; imageUrl: string | null; enrollmentUrl: string | null; order: number; isActive: boolean }
 type CourseForm = Omit<Course, 'id'>
-const emptyForm: CourseForm = { title: '', description: '', instructor: '', level: 'Pemula', duration: '', schedule: '', imageUrl: '', enrollmentUrl: '', order: 1, isActive: true }
+const emptyForm: CourseForm = { title: '', description: '', instructor: '', level: 'Pemula', duration: '', schedule: 'Sabtu · 09.00–12.00', imageUrl: '', enrollmentUrl: '', order: 1, isActive: true }
 
 export default function AdminCourses() {
   const [items, setItems] = useState<Course[]>([])
@@ -101,7 +101,7 @@ export default function AdminCourses() {
           <textarea required placeholder="Deskripsi kursus" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} className="min-h-28 rounded-lg border border-border bg-background p-3 md:col-span-2" />
           <input required placeholder="Level, contoh: Pemula" value={form.level} onChange={(event) => setForm({ ...form, level: event.target.value })} className="rounded-lg border border-border bg-background p-3" />
           <input required placeholder="Durasi, contoh: 2 hari" value={form.duration} onChange={(event) => setForm({ ...form, duration: event.target.value })} className="rounded-lg border border-border bg-background p-3" />
-          <input required placeholder="Jadwal, contoh: Sabtu–Minggu" value={form.schedule} onChange={(event) => setForm({ ...form, schedule: event.target.value })} className="rounded-lg border border-border bg-background p-3" />
+          <label className="space-y-2 text-sm text-text-light"><span>Jadwal kelas</span><input required placeholder="Contoh: Sabtu · 09.00–12.00" value={form.schedule} onChange={(event) => setForm({ ...form, schedule: event.target.value })} className="w-full rounded-lg border border-border bg-background p-3" /><span className="block text-xs text-text-muted">Format bebas, misalnya hari dan jam kelas.</span></label>
           <input required min="0" type="number" placeholder="Urutan" value={form.order} onChange={(event) => setForm({ ...form, order: Number(event.target.value) })} className="rounded-lg border border-border bg-background p-3" />
           <label className="space-y-2 text-sm text-text-light">Gambar kursus (opsional)<input type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading} onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadImage(file) }} className="w-full rounded-lg border border-border bg-background p-3" /><span className="block truncate text-xs text-text-muted">{uploading ? 'Mengunggah ke R2...' : form.imageUrl || 'Pilih gambar baru'}</span></label>
           <input type="url" placeholder="URL pendaftaran (opsional)" value={form.enrollmentUrl ?? ''} onChange={(event) => setForm({ ...form, enrollmentUrl: event.target.value })} className="rounded-lg border border-border bg-background p-3" />

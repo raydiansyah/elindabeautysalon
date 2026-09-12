@@ -98,16 +98,17 @@ async function seed() {
     // 2b. Create sample academy courses
     console.log('📚 Creating sample courses...')
 
-    await db.insert(courses).values([
+    const [{ total: courseCount }] = await db.select({ total: count() }).from(courses)
+    if (Number(courseCount) === 0) await db.insert(courses).values([
       {
         title: 'Fundamental Hair Styling',
         description: 'Pelajari fondasi konsultasi, sectioning, dan styling harian bersama tim Elin.',
         instructor: 'Tim Educator Elin',
         level: 'Pemula',
         duration: '2 hari',
-        schedule: 'Sabtu–Minggu',
+        schedule: 'Sabtu–Minggu · 09.00–16.00',
         imageUrl: '/images/courses/hair-styling.jpg',
-        enrollmentUrl: '#kontak',
+        enrollmentUrl: null,
         order: 1,
       },
       {
@@ -116,9 +117,9 @@ async function seed() {
         instructor: 'MUA Elin',
         level: 'Menengah',
         duration: '3 hari',
-        schedule: 'Jadwal privat',
+        schedule: 'Sabtu · 10.00–15.00',
         imageUrl: '/images/courses/pro-makeup.jpg',
-        enrollmentUrl: '#kontak',
+        enrollmentUrl: null,
         order: 2,
       },
     ])

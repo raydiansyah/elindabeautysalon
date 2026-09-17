@@ -126,8 +126,8 @@ export default function AdminLayout({
                       sidebarCollapsed ? 'lg:justify-center lg:px-4' : 'px-4'
                     } py-3 ${
                       isActive
-                        ? 'bg-primary/20 text-primary border-l-4 border-primary'
-                        : 'text-text-light hover:bg-surface hover:text-foreground'
+                        ? 'bg-gradient-to-r from-accent-gold/25 to-accent-gold/5 text-accent-gold font-semibold border-l-4 border-accent-gold shadow-sm'
+                        : 'text-text-light hover:bg-surface-light hover:text-white'
                     }`}
                     title={sidebarCollapsed ? item.name : undefined}
                   >

@@ -104,6 +104,8 @@ export const gallery = pgTable('gallery', {
   title: text('title').notNull(),
   category: text('category').notNull(), // hair, facial, nail, spa, makeup, etc.
   beforeAfter: boolean('before_after').notNull().default(false),
+  beforeImageUrl: text('before_image_url'),
+  description: text('description'),
   order: integer('order').notNull().default(0),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 })

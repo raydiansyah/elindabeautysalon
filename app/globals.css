@@ -9,18 +9,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ffffff;
-  --primary: #7c3aed;
-  --primary-light: #a855f7;
-  --secondary: #1a1a1a;
-  --surface: #1e1b2e;
-  --surface-light: #2d2a3e;
-  --accent-gold: #f59e0b;
-  --accent-rose: #fb7185;
-  --text-muted: #a1a1aa;
-  --text-light: #d4d4d8;
-  --border: #3f3c5a;
+  --background: #17121c;
+  --foreground: #f8f1e7;
+  --primary: #4b1d68;
+  --primary-light: #6f328f;
+  --secondary: #211927;
+  --surface: #2a2031;
+  --surface-light: #3a2b42;
+  --accent-gold: #d9b978;
+  --accent-rose: #c78b9e;
+  --text-muted: #b9aebb;
+  --text-light: #e1d8df;
+  --border: #594667;
 }
 
 @theme inline {
@@ -38,6 +38,11 @@
   --color-border: var(--border);
   --font-sans: Outfit, ui-sans-serif, system-ui, sans-serif;
   --font-display: Georgia, ui-serif, serif;
+  --color-elin-ink: #17121c;
+  --color-elin-violet: #4b1d68;
+  --color-elin-lilac: #e7dbe8;
+  --color-elin-ivory: #f8f1e7;
+  --color-elin-gold: #d9b978;
 }
 
 body {
@@ -78,6 +83,21 @@ html {
 
 .color-reveal-layer {
   will-change: clip-path, transform;
+}
+
+.font-display {
+  font-family: "Cabinet Grotesk", "Arial Narrow", var(--font-display);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

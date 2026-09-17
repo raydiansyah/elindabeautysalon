@@ -1,10 +1,9 @@
 <!--
-Module: Architecture decision log
-Purpose: Preserve scoped, non-sensitive implementation decisions and verification outcomes.
-Used by: Repository engineering workflow and maintainers.
-Dependencies: AGENTS.md engineering standards.
-Public functions: None.
-Side effects: Records project delivery decisions.
+Purpose: Record material UI architecture and verification decisions for the public salon landing page.
+Used by: Contributors and future UI refactors.
+Dependencies: User brief, AGENTS.md, .cursorrules/RULES.md, antislop UI guidance.
+Contents: Brand direction, content honesty, motion, accessibility, and verification notes.
+Side effects: Documentation only; no runtime behavior.
 -->
 
 ## 2026-09-12 — Always-visible marketing imagery
@@ -19,7 +18,7 @@ Side effects: Records project delivery decisions.
 
 - Decision: Reuse the existing course `schedule` field, seed two realistic example schedules only when the courses table is empty, and prefill the admin form with an editable schedule example.
 - Reason: The requested capability does not require a schema migration; the existing API and public card already transport and display this field.
-- Compatibility: Seed is idempotent for courses and removes the obsolete `#kontak` fallback by allowing the public WhatsApp fallback to handle enrollment.
+- Compatibility: Admin-configured enrollment URLs remain unchanged; course booking continues through the configured public contact flow.
 - Verification: `npx tsc --noEmit` passed; `npm run lint -- --quiet` passed; `npm test -- --run` passed (13 tests).
 
 ## 2026-09-12 — CI database module validation
@@ -27,7 +26,7 @@ Side effects: Records project delivery decisions.
 - Decision: Provide a non-production `DATABASE_URL` placeholder at the CI job level so the Neon client can be constructed during compilation.
 - Reason: GitHub Actions validation has no reason to access the production database, but the current module initializes Neon at import time.
 - Security: The placeholder points to localhost and contains no project secret; production and preview environment variables remain unchanged.
-- Verification: `git diff --check`, `DATABASE_URL=... npx tsc --noEmit`, and `DATABASE_URL=... npm test -- --run` passed (13 tests). The workflow now supplies the placeholder at job scope.
+- Verification: `git diff --check`, `DATABASE_URL=... npx tsc --noEmit`, and `DATABASE_URL=... npm test -- --run` passed (13 tests).
 
 ## 2026-09-12 — Course-specific WhatsApp message
 
@@ -42,3 +41,11 @@ Side effects: Records project delivery decisions.
 - Reason: The requested customer journey has one clear, low-friction contact channel.
 - Scope: Landing page composition, Hero, Navbar, Courses, Footer, Location, and navigation labels; the unused Contact component remains available for future reuse but is no longer rendered.
 - Verification: `npx tsc --noEmit` passed; `npm test -- --run` passed (13 tests). `npm run lint` completed with pre-existing repository warnings only and no errors.
+
+## 2026-09-17 — Beauty Salon Elin landing refactor
+- Direction: Beauty Salon Elin uses dark violet as the base, warm ivory as the readable neutral, and muted gold only for the primary booking moment. Solid fills are intentional for brand clarity and to honor the no-gradient brief.
+- Typography: Cabinet Grotesk is the intended display voice because its editorial proportions suit a premium salon; CSS fallbacks preserve rendering where the font is not locally available.
+- Composition: Hero is artistic asymmetry, services use an expandable rail, gallery uses a pinned horizontal rail, and booking/location use a quieter split layout so each chapter has a distinct rhythm.
+- Content: No fabricated prices, statistics, names, or testimonials are published. Dynamic API content is used when available, otherwise honest empty states or WhatsApp consultation are shown.
+- Motion: GSAP scroll pinning and scrubbed image scale guide the requested timeline without perpetual loops. prefers-reduced-motion disables choreography.
+- Verification: Focused lint, build, and interactive smoke checks are required before handoff.

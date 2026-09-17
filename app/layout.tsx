@@ -12,8 +12,8 @@ import PWARegister from '@/components/PWARegister'
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Salon Kecantikan & Wellness Terbaik",
-  description: "Salon kecantikan profesional dengan layanan terbaik: hair styling, facial treatment, spa, nail art, dan makeup.",
+  title: "Beauty Salon Elin | Perawatan yang terasa personal",
+  description: "Beauty Salon Elin menghadirkan perawatan rambut, kulit, tubuh, dan makeup dalam suasana yang tenang dan personal.",
   keywords: ["beauty salon", "hair styling", "facial treatment", "spa", "nail art", "makeup", "wellness"],
   manifest: '/manifest.webmanifest',
   icons: {

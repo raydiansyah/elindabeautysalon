@@ -1,8 +1,8 @@
 /**
- * Module: Landing WhatsApp CTA
- * Purpose: Create a salon-branded WhatsApp reservation link.
+ * Module: Landing Floating WhatsApp CTA
+ * Purpose: Provide an accessible, luxurious floating concierge button with live pulse.
  * Used by: Public landing page route (app/page.tsx).
- * Dependencies: Framer Motion, Lucide icons, salon constants, public salon settings context.
+ * Dependencies: Framer Motion, Lucide icons, WhatsApp number, public salon settings context.
  * Public functions: WhatsAppButton().
  * Side effects: Opens an external WhatsApp conversation when clicked.
  */
@@ -16,7 +16,7 @@ import { useSalonSettings } from './SalonSettingsProvider'
 export default function WhatsAppButton() {
   const { salonName } = useSalonSettings()
   const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    `Halo, saya ingin membuat reservasi di ${salonName}`
+    `Halo ${salonName}, saya ingin konsultasi dan membuat reservasi.`
   )}`
 
   return (
@@ -24,15 +24,22 @@ export default function WhatsAppButton() {
       href={whatsappLink}
       target="_blank"
       rel="noopener noreferrer"
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
-      className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 bg-green-500 text-white rounded-full shadow-lg shadow-green-500/30 hover:bg-green-600 hover:shadow-xl hover:shadow-green-500/40 transition-all duration-300"
-      aria-label="Chat WhatsApp"
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ delay: 1, type: 'spring', stiffness: 300, damping: 20 }}
+      whileHover={{ scale: 1.06, y: -2 }}
+      whileTap={{ scale: 0.95 }}
+      className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 rounded-full border border-emerald-400/40 bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-3 text-white shadow-2xl shadow-emerald-900/50 backdrop-blur-md transition-all duration-300 hover:brightness-110"
+      aria-label="Chat WhatsApp Concierge"
     >
-      <MessageCircle className="w-6 h-6" />
-      <span className="font-medium hidden sm:inline">Chat</span>
+      <span className="relative flex h-3 w-3">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+        <span className="relative inline-flex h-3 w-3 rounded-full bg-white" />
+      </span>
+      <MessageCircle className="h-5 w-5" />
+      <span className="text-xs font-bold tracking-wide hidden sm:inline">
+        Chat Resepsionis
+      </span>
     </motion.a>
   )
 }

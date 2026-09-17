@@ -1,95 +1,60 @@
 /**
- * Module: Salon Services
- * Purpose: Present the salon treatment menu without publishing fixed prices.
+ * Module: Salon Services Section
+ * Purpose: Present categorized treatment menu with interactive filtering and direct booking link.
  * Used by: Public landing page route (app/page.tsx).
- * Dependencies: Framer Motion, Lucide icons.
+ * Dependencies: TreatmentExplorer, Framer Motion, salon settings context.
  * Public functions: Services()
- * Side effects: None; renders service information.
+ * Side effects: None.
  */
 'use client'
 
 import { motion } from 'framer-motion'
-import { useInView } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
-import {
-  Scissors,
-  Palette,
-  Sparkles,
-  Smile,
-  Hand,
-  Flower2,
-  Crown,
-  Eye,
-} from 'lucide-react'
+import { Sparkles } from 'lucide-react'
+import TreatmentExplorer from './TreatmentExplorer'
 
-const iconMap = {
-  scissors: Scissors,
-  palette: Palette,
-  sparkles: Sparkles,
-  'face-smile': Smile,
-  hand: Hand,
-  'flower-2': Flower2,
-  crown: Crown,
-  eye: Eye,
-}
-
-type Service = { id: number; name: string; description: string; icon: keyof typeof iconMap }
-
-export default function Services() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.1 })
-  const [services, setServices] = useState<Service[]>([])
-
-  useEffect(() => {
-    fetch('/api/services?public=true', { cache: 'no-store' })
-      .then((response) => response.json())
-      .then((payload) => setServices(Array.isArray(payload) ? payload : payload.data ?? []))
-      .catch(() => setServices([]))
-  }, [])
-
+export default function Services({
+  onSelectTreatment,
+}: {
+  onSelectTreatment?: (treatmentName: string) => void
+}) {
   return (
-    <section id="layanan" className="py-20 md:py-32">
+    <section id="layanan" className="relative isolate py-24 md:py-36 overflow-hidden">
+      {/* Subtle Ambient Radial Glow */}
+      <div
+        className="pointer-events-none absolute -top-40 right-1/4 h-96 w-96 rounded-full bg-accent-gold/5 blur-3xl"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -bottom-40 left-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl"
+        aria-hidden="true"
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Editorial Section Header */}
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-14"
         >
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-            Jenis{' '}
-            <span className="text-primary">Layanan</span>
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent-gold/30 bg-accent-gold/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-accent-gold">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>Katalog Perawatan Eksklusif</span>
+          </div>
+          <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-white">
+            Perawatan yang dirancang untuk{' '}
+            <span className="font-serif italic font-normal text-accent-gold">
+              kebutuhanmu.
+            </span>
           </h2>
-          <p className="text-text-light text-lg max-w-2xl mx-auto">
-            Kami menyediakan berbagai layanan kecantikan profesional untuk kebutuhan Anda
+          <p className="mt-4 text-base sm:text-lg text-text-light/80 max-w-2xl mx-auto font-light leading-relaxed">
+            Pilih kategori di bawah untuk melihat pilihan perawatan rambut, peremajaan kulit, spa tubuh, hingga riasan profesional.
           </p>
         </motion.div>
 
-        {/* Services Grid */}
-        <div className="grid min-h-32 grid-flow-dense grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {!services.length && <p className="col-span-full text-center text-text-muted">Layanan sedang diperbarui.</p>}
-          {services.map((service, index) => {
-            const Icon = iconMap[service.icon as keyof typeof iconMap]
-            return (
-              <motion.div
-                key={service.name}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="group rounded-2xl border border-border bg-surface/50 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
-              >
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/15 transition-colors group-hover:bg-primary/25">
-                  <Icon className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
-                <p className="text-text-muted text-sm mb-4">{service.description}</p>
-              </motion.div>
-            )
-          })}
-        </div>
+        {/* Interactive Treatment Explorer */}
+        <TreatmentExplorer onSelectTreatment={onSelectTreatment} />
       </div>
     </section>
   )

@@ -1,6 +1,6 @@
 /**
  * Module: Gallery item API
- * Purpose: Update and delete one portfolio image record.
+ * Purpose: Update and delete one portfolio image record or Before & After transformation.
  * Used by: Authenticated admin gallery screen.
  * Dependencies: Drizzle gallery schema, Clerk authorization, API response helper, audit log.
  * Public functions: PUT(), DELETE().
@@ -20,9 +20,11 @@ function parseGalleryInput(input: unknown) {
   const imageUrl = typeof value.imageUrl === 'string' ? value.imageUrl.trim() : ''
   const title = typeof value.title === 'string' ? value.title.trim() : ''
   const category = typeof value.category === 'string' ? value.category.trim() : ''
+  const beforeImageUrl = typeof value.beforeImageUrl === 'string' && value.beforeImageUrl.trim() ? value.beforeImageUrl.trim() : null
+  const description = typeof value.description === 'string' && value.description.trim() ? value.description.trim() : null
   const order = Number(value.order)
   if (!imageUrl || !title || !category || !Number.isInteger(order) || order < 0) return { error: 'URL, judul, kategori, dan urutan wajib diisi dengan benar' }
-  return { value: { imageUrl, title, category, order, beforeAfter: Boolean(value.beforeAfter) } }
+  return { value: { imageUrl, title, category, order, beforeAfter: Boolean(value.beforeAfter), beforeImageUrl, description } }
 }
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {

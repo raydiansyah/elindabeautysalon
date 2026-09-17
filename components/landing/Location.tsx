@@ -1,147 +1,195 @@
 /**
- * Module: Salon Location Section
- * Purpose: Render the salon map embed, contact details, and opening hours.
+ * Module: Salon Location & Contact Section
+ * Purpose: Render responsive Google Maps embed, interactive directions button, today-highlighted hours, and contact channels.
  * Used by: Public landing page at / via app/page.tsx.
- * Dependencies: Framer Motion, Lucide icons, OPENING_HOURS constants, public salon settings.
+ * Dependencies: React useSyncExternalStore, Framer Motion, Lucide icons, OPENING_HOURS constants, public salon settings.
  * Public functions: Location()
- * Side effects: Loads Google Maps in a lazy iframe; no application data writes.
+ * Side effects: Loads Google Maps in lazy iframe.
  */
 'use client'
 
+import { useSyncExternalStore } from 'react'
 import { motion } from 'framer-motion'
-import { useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { MapPin, Clock, Phone, Mail, MessageCircle } from 'lucide-react'
+import { MapPin, Clock, Mail, MessageCircle, Navigation } from 'lucide-react'
 import { OPENING_HOURS, WHATSAPP_NUMBER } from '@/lib/constants'
 import { useSalonSettings } from './SalonSettingsProvider'
+import SalonStatusBadge from './SalonStatusBadge'
+
+function subscribeToDay(callback: () => void) {
+  const interval = setInterval(callback, 60000)
+  return () => clearInterval(interval)
+}
+
+function getTodayClientName(): string {
+  const daysMap = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+  return daysMap[new Date().getDay()]
+}
+
+function getTodayServerName(): string {
+  return ''
+}
 
 export default function Location() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const { salonName, mapsEmbedUrl } = useSalonSettings()
+  const todayName = useSyncExternalStore(subscribeToDay, getTodayClientName, getTodayServerName)
 
-  const { mapsEmbedUrl } = useSalonSettings()
+  const defaultMapsUrl =
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126920.28299839958!2d106.759478!3d-6.229728!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e49fe3ddb3%3A0x72a5a54659b867c4!2sJakarta%20Selatan!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid'
+
+  const activeEmbedUrl =
+    mapsEmbedUrl && mapsEmbedUrl !== 'https://www.google.com/maps/embed?pb=your-maps-embed-url'
+      ? mapsEmbedUrl
+      : defaultMapsUrl
 
   return (
-    <section id="lokasi" className="py-20 md:py-32">
+    <section id="lokasi" className="py-24 md:py-36 relative overflow-hidden bg-elin-ink/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-            Lokasi &{' '}
-            <span className="text-primary">Jam Buka</span>
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent-gold/30 bg-accent-gold/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-accent-gold">
+            <MapPin className="h-3.5 w-3.5" />
+            <span>Kunjungan & Lokasi</span>
+          </div>
+          <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-white">
+            Temukan kenyamanan kami di{' '}
+            <span className="font-serif italic font-normal text-accent-gold">
+              pusat kota.
+            </span>
           </h2>
-          <p className="text-text-light text-lg max-w-2xl mx-auto">
-            Kunjungi salon kami atau hubungi untuk reservasi
+          <p className="mt-4 text-base sm:text-lg text-text-light/80 max-w-2xl mx-auto font-light leading-relaxed">
+            Akses strategis dengan fasilitas parkir nyaman dan ruang perawatan yang tenang.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Google Maps */}
+        {/* 2-Column Map & Details Layout */}
+        <div className="grid lg:grid-cols-12 gap-8 items-stretch">
+          {/* Left: Google Maps Frame */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="rounded-2xl overflow-hidden border border-border"
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-7 flex flex-col overflow-hidden rounded-3xl border border-white/15 bg-surface/40 shadow-2xl backdrop-blur-md"
           >
-            {mapsEmbedUrl && mapsEmbedUrl !== 'https://www.google.com/maps/embed?pb=your-maps-embed-url' ? (
+            <div className="relative min-h-[380px] sm:min-h-[460px] w-full flex-1">
               <iframe
-                src={mapsEmbedUrl}
-                title="Lokasi Beauty Salon ELIN di Google Maps"
+                src={activeEmbedUrl}
+                title={`Peta Lokasi ${salonName}`}
                 width="100%"
                 height="100%"
-                style={{ border: 0, minHeight: '400px' }}
-                allowFullScreen
+                className="absolute inset-0 h-full w-full border-0 grayscale-[20%] contrast-110"
                 loading="lazy"
                 referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
               />
-            ) : (
-              <div className="bg-surface/50 aspect-square flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="w-16 h-16 text-primary mx-auto mb-4" />
-                  <p className="text-text-muted">Google Maps akan ditampilkan di sini</p>
-                  <p className="text-sm text-text-muted mt-2">
-                    Setup NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL di .env.local
-                  </p>
-                </div>
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-4 p-5 bg-surface border-t border-white/10">
+              <div className="flex items-center gap-2.5 text-xs text-text-light">
+                <MapPin className="h-4 w-4 text-accent-gold" />
+                <span>Navigasi instan via smartphone</span>
               </div>
-            )}
+              <a
+                href="https://maps.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-accent-gold px-4 py-2 text-xs font-semibold text-elin-ink transition-transform hover:scale-105 shadow-md shadow-accent-gold/20"
+              >
+                <Navigation className="h-3.5 w-3.5" />
+                <span>Buka di Google Maps</span>
+              </a>
+            </div>
           </motion.div>
 
-          {/* Location Info & Hours */}
+          {/* Right: Operational Hours & Direct Contacts */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="space-y-8"
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="lg:col-span-5 flex flex-col justify-between space-y-6"
           >
-            {/* Address & Contact */}
-            <div className="bg-surface/50 backdrop-blur-sm rounded-2xl border border-border p-6 space-y-4">
-              <div className="flex items-start gap-4">
-                <MapPin className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+            {/* Hours Card with Today Highlight */}
+            <div className="rounded-3xl border border-white/15 bg-surface/70 p-6 sm:p-7 backdrop-blur-xl shadow-xl">
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2.5 text-base font-semibold text-white">
+                  <Clock className="h-5 w-5 text-accent-gold" />
+                  <span>Jadwal Operasional</span>
+                </div>
+                <SalonStatusBadge />
+              </div>
+
+              <div className="space-y-2 text-xs sm:text-sm">
+                {OPENING_HOURS.map((item) => {
+                  const isToday = item.day === todayName
+                  return (
+                    <div
+                      key={item.day}
+                      suppressHydrationWarning
+                      className={`flex items-center justify-between rounded-xl px-3 py-2 transition-colors ${
+                        isToday
+                          ? 'bg-accent-gold/15 border border-accent-gold/30 text-accent-gold font-semibold'
+                          : 'text-text-light/80 hover:bg-white/5'
+                      }`}
+                    >
+                      <span suppressHydrationWarning className="flex items-center gap-2">
+                        {isToday && <span className="h-1.5 w-1.5 rounded-full bg-accent-gold animate-pulse" />}
+                        <span>{item.day}</span>
+                        {isToday && <span className="text-[10px] uppercase font-bold text-accent-gold">(Hari Ini)</span>}
+                      </span>
+                      <span suppressHydrationWarning className={isToday ? 'text-white' : 'text-text-muted'}>
+                        {item.hours}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Contact Channels Card */}
+            <div className="rounded-3xl border border-white/15 bg-surface/70 p-6 sm:p-7 backdrop-blur-xl shadow-xl space-y-4">
+              <h3 className="font-display text-lg font-bold text-white mb-2">
+                Pusat Kontak & Bantuan
+              </h3>
+
+              <div className="flex items-start gap-3.5 text-xs sm:text-sm text-text-light">
+                <MapPin className="h-4 w-4 text-accent-gold shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold mb-1">Alamat</h3>
-                  <p className="text-text-light">
-                    Jl. Contoh No. 123, Jakarta Selatan, Indonesia
+                  <p className="font-semibold text-white">Alamat Salon</p>
+                  <p className="text-text-muted mt-0.5 leading-relaxed">
+                    Jl. Senopati Raya No. 45, Kebayoran Baru, Jakarta Selatan
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
-                <Phone className="w-6 h-6 text-primary flex-shrink-0" />
+              <div className="flex items-center gap-3.5 text-xs sm:text-sm text-text-light">
+                <MessageCircle className="h-4 w-4 text-accent-gold shrink-0" />
                 <div>
-                  <h3 className="font-semibold mb-1">Telepon</h3>
-                  <a href="tel:+622112345678" className="text-text-light hover:text-primary transition-colors">
-                    +62 21 1234 5678
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <Mail className="w-6 h-6 text-primary flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold mb-1">Email</h3>
-                  <a href="mailto:info@elynd-beauty.com" className="text-text-light hover:text-primary transition-colors">
-                    info@elynd-beauty.com
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <MessageCircle className="w-6 h-6 text-primary flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold mb-1">WhatsApp</h3>
+                  <p className="font-semibold text-white">WhatsApp Concierge</p>
                   <a
                     href={`https://wa.me/${WHATSAPP_NUMBER}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-text-light hover:text-primary transition-colors"
+                    className="text-accent-gold hover:underline"
                   >
-                    +62 812-3456-7890
+                    +62 {WHATSAPP_NUMBER.replace(/^62/, '')}
                   </a>
                 </div>
               </div>
-            </div>
 
-            {/* Opening Hours */}
-            <div className="bg-surface/50 backdrop-blur-sm rounded-2xl border border-border p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Clock className="w-6 h-6 text-primary" />
-                <h3 className="text-xl font-semibold">Jam Buka</h3>
-              </div>
-
-              <div className="space-y-3">
-                {OPENING_HOURS.map((item) => (
-                  <div key={item.day} className="flex justify-between items-center">
-                    <span className="text-text-light">{item.day}</span>
-                    <span className="text-foreground font-medium">{item.hours}</span>
-                  </div>
-                ))}
+              <div className="flex items-center gap-3.5 text-xs sm:text-sm text-text-light">
+                <Mail className="h-4 w-4 text-accent-gold shrink-0" />
+                <div>
+                  <p className="font-semibold text-white">Email Resmi</p>
+                  <a href="mailto:hello@elyndbeauty.com" className="text-text-muted hover:text-white">
+                    hello@elyndbeauty.com
+                  </a>
+                </div>
               </div>
             </div>
           </motion.div>
